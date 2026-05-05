@@ -101,6 +101,15 @@ Este projeto foi desenvolvido exclusivamente para fins educacionais, como parte 
 
 ---
 
+## 🎨 Design do Projeto
+Você pode visualizar o protótipo interativo no Figma através do link abaixo:
+* [Protótipo no Figma](https://www.figma.com/design/elYdlws8eHOEnBasBrfRBw/Figma-basics?node-id=1847-2&t=piWF2I648WdjimWg-1)
+
+## 📊 Diagrama de Casos de Uso
+Abaixo está a representação visual das funcionalidades do sistema:
+
+![Diagrama de Casos de Uso](./docs/diagrama_de_casos_de_uso.png)
+
 ## 👨‍💻 Autor
 
 Desenvolvido por **Fernandes**
