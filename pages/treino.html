@@ -1,29 +1,100 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Treino - Equipe Shadow</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Treino — Equipe Shadow</title>
+  <link rel="stylesheet" href="../assets/css/style.css"/>
 </head>
 <body>
-    <div class="navbar">
-        <a href="home.html">Início</a>
-        <a href="treino.html" style="color: #fff; text-decoration: underline;">Treino</a>
-        <a href="dieta.html">Dieta</a>
-        <a href="perfil.html">Perfil</a>
-        <a href="../index.html">Sair</a>
+
+  <nav class="navbar">
+    <a href="home.html" class="brand">IRONZONE</a>
+    <div class="nav-links">
+      <a href="home.html">Início</a>
+      <a href="treino.html" class="active">Treino</a>
+      <a href="dieta.html">Dieta</a>
+      <a href="perfil.html">Perfil</a>
+      <a href="../index.html" class="sair">Sair</a>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <div class="page-header">
+      <div class="eyebrow">Terça-feira · Semana 12</div>
+      <h2>TREINO DE HOJE</h2>
+      <p>Peito &amp; Tríceps · 8 exercícios · ~55 minutos · Intermediário</p>
     </div>
 
-    <div class="content">
-        <h2>Seu Treino</h2>
-        <div class="card">
-            <h3>Treino A - Peito e Tríceps</h3>
-            <ul>
-                <li>Supino Reto - 4x10</li>
-                <li>Crucifixo Inclinado - 3x12</li>
-                <li>Tríceps Pulley - 4x12</li>
-            </ul>
-        </div>
+    <div class="stat-strip">
+      <div class="stat-box"><div class="val">8</div><div class="lbl">Exercícios</div></div>
+      <div class="stat-box"><div class="val">55</div><div class="lbl">Minutos</div></div>
+      <div class="stat-box"><div class="val">380</div><div class="lbl">Kcal aprox.</div></div>
     </div>
+
+    <div class="sec-head"><h3>Exercícios — <span>Peito</span></h3></div>
+    <div class="card" style="padding:8px 16px;">
+      <div class="ex-row">
+        <div class="ex-num">01</div>
+        <div class="ex-info"><div class="ex-name">Supino Reto com Barra</div><div class="ex-detail">4 séries × 10 reps · 90s descanso</div></div>
+        <div class="ex-tag">Composto</div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">02</div>
+        <div class="ex-info"><div class="ex-name">Supino Inclinado Halteres</div><div class="ex-detail">3 séries × 12 reps · 75s descanso</div></div>
+        <div class="ex-tag">Composto</div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">03</div>
+        <div class="ex-info"><div class="ex-name">Crossover no Cabo</div><div class="ex-detail">3 séries × 15 reps · 60s descanso</div></div>
+        <div class="ex-tag">Isolado</div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">04</div>
+        <div class="ex-info"><div class="ex-name">Flexão de Braço</div><div class="ex-detail">3 séries até a falha · 60s descanso</div></div>
+        <div class="ex-tag">Peso Corpo</div>
+      </div>
+    </div>
+
+    <div class="sec-head"><h3>Exercícios — <span>Tríceps</span></h3></div>
+    <div class="card" style="padding:8px 16px;">
+      <div class="ex-row">
+        <div class="ex-num">05</div>
+        <div class="ex-info"><div class="ex-name">Tríceps Pulley</div><div class="ex-detail">4 séries × 12 reps · 75s descanso</div></div>
+        <div class="ex-tag">Isolado</div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">06</div>
+        <div class="ex-info"><div class="ex-name">Tríceps Testa</div><div class="ex-detail">3 séries × 10 reps · 75s descanso</div></div>
+        <div class="ex-tag">Isolado</div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">07</div>
+        <div class="ex-info"><div class="ex-name">Mergulho no Banco</div><div class="ex-detail">3 séries até a falha · 60s descanso</div></div>
+        <div class="ex-tag">Peso Corpo</div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">08</div>
+        <div class="ex-info"><div class="ex-name">Kick Back Haltere</div><div class="ex-detail">3 séries × 15 reps · 45s descanso</div></div>
+        <div class="ex-tag">Isolado</div>
+      </div>
+    </div>
+
+    <div class="sec-head"><h3>Plano <span>Semanal</span></h3></div>
+    <div class="card">
+      <ul>
+        <li><span>Segunda</span>  <span>Costas &amp; Bíceps · 7 exerc · 50min</span></li>
+        <li><span style="color:var(--red);font-weight:700;">Terça ←</span>  <span style="color:var(--red);font-weight:700;">Peito &amp; Tríceps · 8 exerc · 55min</span></li>
+        <li><span>Quarta</span>   <span>Pernas · 9 exerc · 65min</span></li>
+        <li><span>Quinta</span>   <span>Ombros &amp; Abdômen · 8 exerc · 50min</span></li>
+        <li><span>Sexta</span>    <span>Full Body · 10 exerc · 70min</span></li>
+        <li><span>Sábado</span>   <span style="color:var(--mut)">Descanso ativo</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <footer>Equipe <span>Shadow</span> · IronZone · Programação para Web 2026</footer>
 </body>
 </html>
