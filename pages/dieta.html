@@ -1,25 +1,112 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Dieta - equipeShadow</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dieta — Equipe Shadow</title>
+  <link rel="stylesheet" href="../assets/css/style.css"/>
 </head>
 <body>
-    <div class="navbar">
-        <a href="home.html">Início</a>
-        <a href="treino.html">Treino</a>
-        <a href="dieta.html" style="color: #fff; text-decoration: underline;">Dieta</a>
-        <a href="perfil.html">Perfil</a>
-        <a href="../index.html">Sair</a>
+
+  <nav class="navbar">
+    <a href="home.html" class="brand">IRONZONE</a>
+    <div class="nav-links">
+      <a href="home.html">Início</a>
+      <a href="treino.html">Treino</a>
+      <a href="dieta.html" class="active">Dieta</a>
+      <a href="perfil.html">Perfil</a>
+      <a href="../index.html" class="sair">Sair</a>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <div class="page-header">
+      <div class="eyebrow">Nutrição · Hoje</div>
+      <h2>PLANO ALIMENTAR</h2>
+      <p>2.800 kcal · Meta diária · Foco em hipertrofia</p>
     </div>
 
-    <div class="content">
-        <h2>Sua Dieta Atual</h2>
-        <div class="card">
-            <h3>Refeição 1 - Café da Manhã</h3>
-            <p>4 Ovos inteiros, 50g de Aveia, 1 Banana.</p>
+    <div class="sec-head"><h3>⚡ <span>Macronutrientes</span></h3></div>
+    <div class="card">
+      <div class="macro-row">
+        <div class="macro-item">
+          <div class="m-label">Proteína</div>
+          <div class="m-val">180g</div>
+          <div class="macro-bar"><div class="macro-fill fill-p"></div></div>
         </div>
+        <div class="macro-item">
+          <div class="m-label">Carboidrato</div>
+          <div class="m-val">320g</div>
+          <div class="macro-bar"><div class="macro-fill fill-c"></div></div>
+        </div>
+        <div class="macro-item">
+          <div class="m-label">Gordura</div>
+          <div class="m-val">70g</div>
+          <div class="macro-bar"><div class="macro-fill fill-g"></div></div>
+        </div>
+      </div>
+      <p style="font-size:.75rem;color:var(--mut);">Total: 2.800 kcal · Déficit/Superávit: +300 kcal</p>
     </div>
+
+    <div class="sec-head"><h3>Refeições do <span>Dia</span></h3></div>
+
+    <div class="meal-card">
+      <div class="meal-icon">🌅</div>
+      <div class="meal-info">
+        <div class="meal-name">Café da Manhã</div>
+        <div class="meal-detail">4 ovos mexidos · 50g aveia · 1 banana · 07:00</div>
+      </div>
+      <div class="meal-kcal">620<span>kcal</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-icon">🥜</div>
+      <div class="meal-info">
+        <div class="meal-name">Lanche Pré-Treino</div>
+        <div class="meal-detail">Pasta de amendoim + pão integral · 10:00</div>
+      </div>
+      <div class="meal-kcal">380<span>kcal</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-icon">🍗</div>
+      <div class="meal-info">
+        <div class="meal-name">Almoço</div>
+        <div class="meal-detail">Frango grelhado + arroz integral + salada · 13:00</div>
+      </div>
+      <div class="meal-kcal">750<span>kcal</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-icon">🥤</div>
+      <div class="meal-info">
+        <div class="meal-name">Pós-Treino</div>
+        <div class="meal-detail">Whey protein + banana + mel · 16:30</div>
+      </div>
+      <div class="meal-kcal">420<span>kcal</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-icon">🍽️</div>
+      <div class="meal-info">
+        <div class="meal-name">Jantar</div>
+        <div class="meal-detail">Atum + batata doce + brócolis · 19:30</div>
+      </div>
+      <div class="meal-kcal">480<span>kcal</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-icon">🌙</div>
+      <div class="meal-info">
+        <div class="meal-name">Ceia</div>
+        <div class="meal-detail">Iogurte grego + castanhas · 22:00</div>
+      </div>
+      <div class="meal-kcal">250<span>kcal</span></div>
+    </div>
+
+  </div>
+
+  <footer>Equipe <span>Shadow</span> · IronZone · Programação para Web 2026</footer>
 </body>
 </html>
