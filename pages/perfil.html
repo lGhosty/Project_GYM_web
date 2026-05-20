@@ -1,27 +1,55 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Perfil - Equipe Shadow</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil — Equipe Shadow</title>
+  <link rel="stylesheet" href="../assets/css/style.css"/>
 </head>
 <body>
-    <div class="navbar">
-        <a href="home.html">Início</a>
-        <a href="treino.html">Treino</a>
-        <a href="dieta.html">Dieta</a>
-        <a href="perfil.html" style="color: #fff; text-decoration: underline;">Perfil</a>
-        <a href="../index.html">Sair</a>
+
+  <nav class="navbar">
+    <a href="home.html" class="brand">IRONZONE</a>
+    <div class="nav-links">
+      <a href="home.html">Início</a>
+      <a href="treino.html">Treino</a>
+      <a href="dieta.html">Dieta</a>
+      <a href="perfil.html" class="active">Perfil</a>
+      <a href="../index.html" class="sair">Sair</a>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <div class="perfil-hero">
+      <div class="perfil-av">🧑</div>
+      <div class="perfil-name">José Lira</div>
+      <div class="perfil-plan">Plano Premium · Ativo</div>
     </div>
 
-    <div class="content">
-        <h2>Seu Perfil</h2>
-        <div class="card">
-            <h3>Dados Pessoais</h3>
-            <p><strong>Nome:</strong> José Lira</p>
-            <p><strong>Email:</strong> aluno@equipeshadow.com</p>
-            <p><strong>Status:</strong> Ativo</p>
-        </div>
+    <div class="stat-strip">
+      <div class="stat-box"><div class="val">82</div><div class="lbl">Peso (kg)</div></div>
+      <div class="stat-box"><div class="val">175</div><div class="lbl">Altura (cm)</div></div>
+      <div class="stat-box"><div class="val">14%</div><div class="lbl">Gordura</div></div>
     </div>
+
+    <div class="sec-head" style="margin-top:24px;"><h3>Dados <span>Pessoais</span></h3></div>
+    <div class="card" style="border-left:none;padding:8px 20px;">
+      <div class="info-row"><span class="key">Nome completo</span><span class="val">José Lira</span></div>
+      <div class="info-row"><span class="key">E-mail</span><span class="val">aluno@equipeshadow.com</span></div>
+      <div class="info-row"><span class="key">Objetivo</span><span class="val">Ganho de Massa</span></div>
+      <div class="info-row"><span class="key">Treinos concluídos</span><span class="val">47</span></div>
+      <div class="info-row"><span class="key">Membro desde</span><span class="val">Janeiro 2026</span></div>
+      <div class="info-row"><span class="key">Sequência atual</span><span class="val">🔥 12 dias</span></div>
+      <div class="info-row" style="border:none;"><span class="key">Status</span><span class="badge badge-ok">Ativo</span></div>
+    </div>
+
+    <a href="../index.html">
+      <button class="btn-logout">SAIR DA CONTA</button>
+    </a>
+
+  </div>
+
+  <footer>Equipe <span>Shadow</span> · IronZone · Programação para Web 2026</footer>
 </body>
 </html>
