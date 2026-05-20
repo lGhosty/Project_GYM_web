@@ -1,21 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Cadastro - Equipe Shadow</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastro — Equipe Shadow</title>
+  <link rel="stylesheet" href="../assets/css/style.css"/>
 </head>
 <body>
-    <div class="auth-container">
-        <h1>Equipe Shadow</h1>
-        <h2>Crie sua conta</h2>
-        <form action="../index.html">
-            <input type="text" placeholder="Nome Completo" required>
-            <input type="email" placeholder="Seu E-mail" required>
-            <input type="password" placeholder="Crie uma Senha" required>
-            <button type="submit">Cadastrar</button>
-        </form>
-        <a href="../index.html">Já tem uma conta? Faça login</a>
+  <div class="auth-page">
+    <div class="auth-box">
+      <div class="logo">
+        <span class="logo-title">IRONZONE</span>
+        <span class="logo-sub">Crie sua conta</span>
+      </div>
+      <h2>Cadastro</h2>
+      <p>Preencha seus dados para começar</p>
+
+      <form action="../index.html">
+        <div class="field-row">
+          <div class="field">
+            <label>Nome</label>
+            <input type="text" placeholder="João" required/>
+          </div>
+          <div class="field">
+            <label>Sobrenome</label>
+            <input type="text" placeholder="Silva"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" placeholder="seu@email.com" required/>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Senha</label>
+            <input type="password" placeholder="••••••••" required/>
+          </div>
+          <div class="field">
+            <label>Confirmar senha</label>
+            <input type="password" placeholder="••••••••" required/>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Peso (kg)</label>
+            <input type="number" placeholder="80"/>
+          </div>
+          <div class="field">
+            <label>Altura (cm)</label>
+            <input type="number" placeholder="175"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Objetivo</label>
+          <select>
+            <option>Ganho de Massa</option>
+            <option>Perda de Peso</option>
+            <option>Definição Muscular</option>
+            <option>Condicionamento</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary">CRIAR CONTA</button>
+      </form>
+      <p class="auth-switch">Já tem conta? <a href="../index.html">Fazer login</a></p>
     </div>
+  </div>
 </body>
 </html>
