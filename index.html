@@ -15,20 +15,44 @@
       </div>
       <h2>Entrar na conta</h2>
       <p>Acesse sua plataforma de treinos e dieta</p>
-
-      <form action="pages/home.html">
+      <div id="msg-erro" style="display:none;color:#ff4444;font-size:.85rem;margin-bottom:10px;text-align:center;"></div>
+      <form id="form-login">
         <div class="field">
           <label>E-mail</label>
-          <input type="email" placeholder="seu@email.com" required/>
+          <input type="email" id="email" placeholder="seu@email.com" required/>
         </div>
         <div class="field">
           <label>Senha</label>
-          <input type="password" placeholder="••••••••" required/>
+          <input type="password" id="senha" placeholder="••••••••" required/>
         </div>
         <button type="submit" class="btn-primary">ENTRAR</button>
       </form>
       <p class="auth-switch">Não tem conta? <a href="pages/cadastro.html">Cadastre-se</a></p>
     </div>
   </div>
+  <script>
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const erro = document.getElementById('msg-erro')
+      try {
+        const res = await fetch('http://localhost:3333/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('email').value,
+            senha: document.getElementById('senha').value
+          })
+        })
+        const dados = await res.json()
+        if (!res.ok) throw new Error(dados.erro || 'Erro ao fazer login')
+        localStorage.setItem('token', dados.token)
+        localStorage.setItem('usuario', JSON.stringify(dados.usuario))
+        window.location.href = 'pages/home.html'
+      } catch (err) {
+        erro.textContent = err.message
+        erro.style.display = 'block'
+      }
+    })
+  </script>
 </body>
 </html>
