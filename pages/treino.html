@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="../assets/css/style.css"/>
 </head>
 <body>
-
   <nav class="navbar">
     <a href="home.html" class="brand">IRONZONE</a>
     <div class="nav-links">
@@ -15,86 +14,125 @@
       <a href="treino.html" class="active">Treino</a>
       <a href="dieta.html">Dieta</a>
       <a href="perfil.html">Perfil</a>
-      <a href="../index.html" class="sair">Sair</a>
+      <a href="#" id="btn-sair" class="sair">Sair</a>
     </div>
   </nav>
 
   <div class="content">
-
     <div class="page-header">
-      <div class="eyebrow">Terça-feira · Semana 12</div>
-      <h2>TREINO DE HOJE</h2>
-      <p>Peito &amp; Tríceps · 8 exercícios · ~55 minutos · Intermediário</p>
+      <div class="eyebrow">Seus treinos cadastrados</div>
+      <h2>TREINOS</h2>
+      <p>Consulte e cadastre seus treinos</p>
     </div>
 
-    <div class="stat-strip">
-      <div class="stat-box"><div class="val">8</div><div class="lbl">Exercícios</div></div>
-      <div class="stat-box"><div class="val">55</div><div class="lbl">Minutos</div></div>
-      <div class="stat-box"><div class="val">380</div><div class="lbl">Kcal aprox.</div></div>
+    <div id="lista-treinos">
+      <p style="color:var(--mut)">Carregando...</p>
     </div>
 
-    <div class="sec-head"><h3>Exercícios — <span>Peito</span></h3></div>
-    <div class="card" style="padding:8px 16px;">
-      <div class="ex-row">
-        <div class="ex-num">01</div>
-        <div class="ex-info"><div class="ex-name">Supino Reto com Barra</div><div class="ex-detail">4 séries × 10 reps · 90s descanso</div></div>
-        <div class="ex-tag">Composto</div>
-      </div>
-      <div class="ex-row">
-        <div class="ex-num">02</div>
-        <div class="ex-info"><div class="ex-name">Supino Inclinado Halteres</div><div class="ex-detail">3 séries × 12 reps · 75s descanso</div></div>
-        <div class="ex-tag">Composto</div>
-      </div>
-      <div class="ex-row">
-        <div class="ex-num">03</div>
-        <div class="ex-info"><div class="ex-name">Crossover no Cabo</div><div class="ex-detail">3 séries × 15 reps · 60s descanso</div></div>
-        <div class="ex-tag">Isolado</div>
-      </div>
-      <div class="ex-row">
-        <div class="ex-num">04</div>
-        <div class="ex-info"><div class="ex-name">Flexão de Braço</div><div class="ex-detail">3 séries até a falha · 60s descanso</div></div>
-        <div class="ex-tag">Peso Corpo</div>
-      </div>
-    </div>
-
-    <div class="sec-head"><h3>Exercícios — <span>Tríceps</span></h3></div>
-    <div class="card" style="padding:8px 16px;">
-      <div class="ex-row">
-        <div class="ex-num">05</div>
-        <div class="ex-info"><div class="ex-name">Tríceps Pulley</div><div class="ex-detail">4 séries × 12 reps · 75s descanso</div></div>
-        <div class="ex-tag">Isolado</div>
-      </div>
-      <div class="ex-row">
-        <div class="ex-num">06</div>
-        <div class="ex-info"><div class="ex-name">Tríceps Testa</div><div class="ex-detail">3 séries × 10 reps · 75s descanso</div></div>
-        <div class="ex-tag">Isolado</div>
-      </div>
-      <div class="ex-row">
-        <div class="ex-num">07</div>
-        <div class="ex-info"><div class="ex-name">Mergulho no Banco</div><div class="ex-detail">3 séries até a falha · 60s descanso</div></div>
-        <div class="ex-tag">Peso Corpo</div>
-      </div>
-      <div class="ex-row">
-        <div class="ex-num">08</div>
-        <div class="ex-info"><div class="ex-name">Kick Back Haltere</div><div class="ex-detail">3 séries × 15 reps · 45s descanso</div></div>
-        <div class="ex-tag">Isolado</div>
-      </div>
-    </div>
-
-    <div class="sec-head"><h3>Plano <span>Semanal</span></h3></div>
+    <div class="sec-head" style="margin-top:32px;"><h3>Cadastrar <span>Novo Treino</span></h3></div>
     <div class="card">
-      <ul>
-        <li><span>Segunda</span>  <span>Costas &amp; Bíceps · 7 exerc · 50min</span></li>
-        <li><span style="color:var(--red);font-weight:700;">Terça ←</span>  <span style="color:var(--red);font-weight:700;">Peito &amp; Tríceps · 8 exerc · 55min</span></li>
-        <li><span>Quarta</span>   <span>Pernas · 9 exerc · 65min</span></li>
-        <li><span>Quinta</span>   <span>Ombros &amp; Abdômen · 8 exerc · 50min</span></li>
-        <li><span>Sexta</span>    <span>Full Body · 10 exerc · 70min</span></li>
-        <li><span>Sábado</span>   <span style="color:var(--mut)">Descanso ativo</span></li>
-      </ul>
+      <div id="msg-treino" style="display:none;font-size:.85rem;margin-bottom:12px;"></div>
+      <form id="form-treino">
+        <div class="field">
+          <label>Nome do Treino</label>
+          <input type="text" id="nome-treino" placeholder="Ex: Peito e Tríceps" required/>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Dia da Semana</label>
+            <input type="text" id="dia-semana" placeholder="Ex: Segunda" required/>
+          </div>
+          <div class="field">
+            <label>Duração (min)</label>
+            <input type="number" id="duracao" placeholder="Ex: 60" required/>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">CADASTRAR TREINO</button>
+      </form>
     </div>
-
   </div>
 
   <footer>Equipe <span>Shadow</span> · IronZone · Programação para Web 2026</footer>
+
+  <script>
+    const token = localStorage.getItem('token')
+    if (!token) window.location.href = '../index.html'
+
+    const API = 'http://localhost:3333/api'
+    const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+
+    document.getElementById('btn-sair').addEventListener('click', (e) => {
+      e.preventDefault()
+      localStorage.removeItem('token')
+      localStorage.removeItem('usuario')
+      window.location.href = '../index.html'
+    })
+
+    function carregarTreinos() {
+      fetch(`${API}/treinos`, { headers })
+        .then(r => r.json())
+        .then(treinos => {
+          const el = document.getElementById('lista-treinos')
+          if (!treinos.length) {
+            el.innerHTML = '<div class="card"><p style="color:var(--mut)">Nenhum treino cadastrado ainda.</p></div>'
+            return
+          }
+          el.innerHTML = treinos.map(t => `
+            <div class="card" style="padding:8px 16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <h3 style="margin:0;">💪 ${t.nome}</h3>
+                <span class="badge badge-red">${t.dia_semana}</span>
+              </div>
+              <p style="color:var(--mut);font-size:.83rem;">${t.duracao_min} minutos</p>
+              ${t.exercicios && t.exercicios.length ? `
+                <div style="margin-top:8px;">
+                  ${t.exercicios.map((ex, i) => `
+                    <div class="ex-row">
+                      <div class="ex-num">${String(i+1).padStart(2,'0')}</div>
+                      <div class="ex-info">
+                        <div class="ex-name">${ex.nome}</div>
+                        <div class="ex-detail">${ex.series} séries × ${ex.repeticoes} reps</div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>` : ''}
+            </div>
+          `).join('')
+        })
+        .catch(() => {
+          document.getElementById('lista-treinos').innerHTML = '<div class="card"><p style="color:var(--mut)">Erro ao carregar treinos.</p></div>'
+        })
+    }
+
+    carregarTreinos()
+
+    document.getElementById('form-treino').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const msg = document.getElementById('msg-treino')
+      try {
+        const res = await fetch(`${API}/treinos`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            nome: document.getElementById('nome-treino').value,
+            dia_semana: document.getElementById('dia-semana').value,
+            duracao_min: parseInt(document.getElementById('duracao').value),
+            exercicios: []
+          })
+        })
+        const dados = await res.json()
+        if (!res.ok) throw new Error(dados.erro || 'Erro ao cadastrar')
+        msg.textContent = '✅ Treino cadastrado com sucesso!'
+        msg.style.color = '#00cc66'
+        msg.style.display = 'block'
+        e.target.reset()
+        carregarTreinos()
+      } catch (err) {
+        msg.textContent = err.message
+        msg.style.color = '#ff4444'
+        msg.style.display = 'block'
+      }
+    })
+  </script>
 </body>
 </html>
