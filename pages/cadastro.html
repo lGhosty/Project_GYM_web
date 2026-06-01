@@ -15,45 +15,45 @@
       </div>
       <h2>Cadastro</h2>
       <p>Preencha seus dados para começar</p>
-
-      <form action="../index.html">
+      <div id="msg" style="display:none;font-size:.85rem;margin-bottom:10px;text-align:center;"></div>
+      <form id="form-cadastro">
         <div class="field-row">
           <div class="field">
             <label>Nome</label>
-            <input type="text" placeholder="João" required/>
+            <input type="text" id="nome" placeholder="João" required/>
           </div>
           <div class="field">
             <label>Sobrenome</label>
-            <input type="text" placeholder="Silva"/>
+            <input type="text" id="sobrenome" placeholder="Silva"/>
           </div>
         </div>
         <div class="field">
           <label>E-mail</label>
-          <input type="email" placeholder="seu@email.com" required/>
+          <input type="email" id="email" placeholder="seu@email.com" required/>
         </div>
         <div class="field-row">
           <div class="field">
             <label>Senha</label>
-            <input type="password" placeholder="••••••••" required/>
+            <input type="password" id="senha" placeholder="••••••••" required/>
           </div>
           <div class="field">
             <label>Confirmar senha</label>
-            <input type="password" placeholder="••••••••" required/>
+            <input type="password" id="senha2" placeholder="••••••••" required/>
           </div>
         </div>
         <div class="field-row">
           <div class="field">
             <label>Peso (kg)</label>
-            <input type="number" placeholder="80"/>
+            <input type="number" id="peso" placeholder="80"/>
           </div>
           <div class="field">
             <label>Altura (cm)</label>
-            <input type="number" placeholder="175"/>
+            <input type="number" id="altura" placeholder="175"/>
           </div>
         </div>
         <div class="field">
           <label>Objetivo</label>
-          <select>
+          <select id="objetivo">
             <option>Ganho de Massa</option>
             <option>Perda de Peso</option>
             <option>Definição Muscular</option>
@@ -65,5 +65,42 @@
       <p class="auth-switch">Já tem conta? <a href="../index.html">Fazer login</a></p>
     </div>
   </div>
+  <script>
+    document.getElementById('form-cadastro').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const msg = document.getElementById('msg')
+      const senha = document.getElementById('senha').value
+      const senha2 = document.getElementById('senha2').value
+      if (senha !== senha2) {
+        msg.textContent = 'As senhas não coincidem.'
+        msg.style.color = '#ff4444'
+        msg.style.display = 'block'
+        return
+      }
+      try {
+        const res = await fetch('http://localhost:3333/api/auth/cadastro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: document.getElementById('nome').value + ' ' + document.getElementById('sobrenome').value,
+            email: document.getElementById('email').value,
+            senha,
+            peso: document.getElementById('peso').value || null,
+            altura: document.getElementById('altura').value || null,
+            objetivo: document.getElementById('objetivo').value
+          })
+        })
+        const dados = await res.json()
+        if (!res.ok) throw new Error(dados.erro || 'Erro ao cadastrar')
+        localStorage.setItem('token', dados.token)
+        localStorage.setItem('usuario', JSON.stringify(dados.usuario))
+        window.location.href = 'home.html'
+      } catch (err) {
+        msg.textContent = err.message
+        msg.style.color = '#ff4444'
+        msg.style.display = 'block'
+      }
+    })
+  </script>
 </body>
 </html>
