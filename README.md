@@ -1,105 +1,198 @@
-# 🏋️ Project_GYM_web(Equipe Shadow) - Consultoria Fitness Online
+# FreakyZone — Equipe Shadow
 
-## 📌 Sobre o Projeto
-
-A **Project_GYM_web** é uma plataforma de consultoria fitness de alta performance, voltada para atletas e entusiastas do fisiculturismo.
-
-O sistema foi desenvolvido para **Programação para Web**, com foco em criar uma experiência moderna, intuitiva e visualmente impactante.
+Plataforma de consultoria fitness desenvolvida para a disciplina de **Programação para Web**.
 
 ---
 
-## 🚀 Funcionalidades Implementadas
+## Sobre o Projeto
 
-O projeto atende aos seguintes requisitos:
-
-### 📁 Estrutura do Projeto
-
-* Organização profissional de pastas
-* Separação de arquivos por responsabilidade (CSS, JS, imagens, páginas)
-
-### 📄 Páginas Desenvolvidas
-
-* 🔐 `index.html` — Login
-* 📝 `cadastro.html` — Cadastro de usuário
-* 🏠 `home.html` — Página inicial
-* 🏋️ `treino.html` — Área de treinos
-* 🥗 `dieta.html` — Planejamento alimentar
-* 👤 `perfil.html` — Perfil do usuário
-
-### 🔗 Navegação
-
-* Links totalmente funcionais entre todas as páginas
-* Menu consistente em todo o sistema
+O FreakyZone é uma aplicação web completa integrada a uma API REST e banco de dados PostgreSQL. Permite que atletas gerenciem seus treinos, dieta e perfil de forma dinâmica.
 
 ---
 
-## 📂 Estrutura de Diretórios
+## Tecnologias Utilizadas
 
-```bash
-equipeShadow/
+**Front-end**
+- HTML5, CSS3, JavaScript puro
+
+**Back-end**
+- Node.js + Express
+- JWT (autenticação)
+- bcryptjs (criptografia de senhas)
+
+**Banco de Dados**
+- PostgreSQL
+
+**Ferramentas**
+- Git & GitHub
+- Figma (prototipação)
+- pgAdmin (gerenciamento do banco)
+- nodemon (desenvolvimento)
+
+---
+
+## Estrutura de Diretórios
+
+```
+Project_Gym_web/
+├── index.html
 ├── assets/
-│   ├── css/
-│   │   └── style.css
-│   ├── img/
-│   │   └── .gitkeep
-│   └── js/
-│       └── .gitkeep
+│   └── css/
+│       └── style.css
 ├── pages/
 │   ├── cadastro.html
-│   ├── dieta.html
 │   ├── home.html
-│   ├── perfil.html
-│   └── treino.html
-├── index.html
-└── README.md
+│   ├── treino.html
+│   ├── dieta.html
+│   └── perfil.html
+├── docs/
+│   ├── diagrama_de_casos_de_uso.png
+│   └── casos-de-uso-v2.md
+├── .gitignore
+├── README.md
+└── server/
+    ├── package.json
+    ├── .env.example
+    └── src/
+        ├── app.js
+        ├── config/
+        │   ├── database.js
+        │   └── schema.sql
+        ├── controllers/
+        │   ├── authController.js
+        │   ├── treinoController.js
+        │   ├── dietaController.js
+        │   └── usuarioController.js
+        ├── middlewares/
+        │   └── authMiddleware.js
+        └── routes/
+            ├── authRoutes.js
+            ├── treinoRoutes.js
+            ├── dietaRoutes.js
+            └── usuarioRoutes.js
 ```
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Pré-requisitos
 
-* **HTML5** → Estruturação das páginas
-* **CSS3** → Estilização customizada (tema neon)
-* **Git & GitHub** → Versionamento e hospedagem
+Antes de rodar o projeto, instale na sua máquina:
+
+- [Node.js LTS](https://nodejs.org) — versão 18 ou superior
+- [PostgreSQL](https://www.postgresql.org/download/) — anote a senha definida na instalação
+
+> **Atenção:** os comandos abaixo devem ser executados no **Command Prompt (CMD)** do Windows, não no PowerShell. No VS Code, clique na seta ao lado do `+` no terminal e escolha **Command Prompt**.
 
 ---
 
-## ⚙️ Como Executar o Projeto
+## Como Executar
 
-1. Clone o repositório:
+### 1. Clone o repositório
 
-```bash
-git clone https://github.com/SEU_USUARIO/Project_GYM_web.git
+```cmd
+git clone https://github.com/SEU_USUARIO/Project_Gym_web.git
+cd Project_Gym_web
 ```
 
-2. Acesse a pasta:
+### 2. Configure o banco de dados
 
-```bash
-cd EquipeShadow
+Abra o **pgAdmin**, crie um banco chamado `ironzone`, abra o **Query Tool** e execute o conteúdo do arquivo `server/src/config/schema.sql`.
+
+### 3. Configure as variáveis de ambiente
+
+Dentro da pasta `server/`, crie um arquivo `.env` baseado no `.env.example`:
+
+```cmd
+cd server
+copy .env.example .env
 ```
 
-3. Abra o arquivo:
+Abra o `.env` e preencha com suas credenciais:
 
-* `index.html` no seu navegador
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=ironzone
+DB_USER=postgres
+DB_PASSWORD=sua_senha_aqui
+JWT_SECRET=segredo123
+PORT=3333
+```
 
-4. Navegue pelo sistema utilizando os botões e menus.
+### 4. Instale as dependências
+
+```cmd
+npm install
+```
+
+### 5. Inicie o servidor
+
+```cmd
+npm run dev
+```
+
+Se aparecer no terminal:
+
+```
+Servidor rodando na porta 3333
+PostgreSQL conectado!
+```
+
+O projeto está funcionando. Acesse no navegador:
+
+```
+http://localhost:3333
+```
 
 ---
 
-## 🎯 Objetivo Acadêmico
+## Endpoints da API
 
-Este projeto foi desenvolvido exclusivamente para fins educacionais, como parte da avaliação da disciplina de **Programação para Web**.
+| Método | Endpoint | Descrição | Auth |
+|--------|----------|-----------|------|
+| POST | `/api/auth/cadastro` | Cadastrar usuário | Não |
+| POST | `/api/auth/login` | Fazer login | Não |
+| GET | `/api/treinos` | Listar treinos | Sim |
+| POST | `/api/treinos` | Cadastrar treino | Sim |
+| GET | `/api/dietas` | Listar refeições | Sim |
+| POST | `/api/dietas` | Adicionar refeição | Sim |
+| GET | `/api/usuarios/perfil` | Ver perfil | Sim |
+| PUT | `/api/usuarios/perfil` | Atualizar perfil | Sim |
+
+> Rotas com **Auth: Sim** exigem o header `Authorization: Bearer <token>`.
 
 ---
 
-## 📌 Melhorias Futuras
+## Banco de Dados
 
-* Integração com JavaScript
-* Sistema de autenticação real
-* Backend com banco de dados
-* Responsividade completa para mobile
+Tabelas criadas no PostgreSQL:
+
+| Tabela | Descrição |
+|--------|-----------|
+| `usuarios` | Dados dos usuários cadastrados |
+| `treinos` | Treinos vinculados a um usuário |
+| `exercicios` | Exercícios vinculados a um treino |
+| `dietas` | Refeições vinculadas a um usuário |
 
 ---
+
+## Casos de Uso
+
+| UC | Nome | Entrega |
+|----|------|---------|
+| UC01 | Efetuar Login | 01 |
+| UC02 | Efetuar Cadastro | 01 |
+| UC03 | Visualizar Painel | 01 |
+| UC04 | Consultar Treino | 01 |
+| UC05 | Consultar Dieta | 01 |
+| UC06 | Gerenciar Perfil | 01 |
+| UC07 | Cadastrar Treino | 02 |
+| UC08 | Adicionar Refeição | 02 |
+| UC09 | Atualizar Perfil | 02 |
+| UC10 | Listar Treinos via API | 02 |
+
+---
+
 
 ## 🎨 Design do Projeto
 Você pode visualizar o protótipo interativo no Figma através do link abaixo:
