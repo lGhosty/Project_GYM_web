@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="../assets/css/style.css"/>
 </head>
 <body>
-
   <nav class="navbar">
     <a href="home.html" class="brand">IRONZONE</a>
     <div class="nav-links">
@@ -15,41 +14,130 @@
       <a href="treino.html">Treino</a>
       <a href="dieta.html">Dieta</a>
       <a href="perfil.html" class="active">Perfil</a>
-      <a href="../index.html" class="sair">Sair</a>
+      <a href="#" id="btn-sair" class="sair">Sair</a>
     </div>
   </nav>
 
   <div class="content">
-
     <div class="perfil-hero">
       <div class="perfil-av">🧑</div>
-      <div class="perfil-name">José Lira</div>
-      <div class="perfil-plan">Plano Premium · Ativo</div>
+      <div class="perfil-name" id="perf-nome">—</div>
+      <div class="perfil-plan">IronZone · Equipe Shadow</div>
     </div>
 
     <div class="stat-strip">
-      <div class="stat-box"><div class="val">82</div><div class="lbl">Peso (kg)</div></div>
-      <div class="stat-box"><div class="val">175</div><div class="lbl">Altura (cm)</div></div>
-      <div class="stat-box"><div class="val">14%</div><div class="lbl">Gordura</div></div>
+      <div class="stat-box"><div class="val" id="perf-peso">—</div><div class="lbl">Peso (kg)</div></div>
+      <div class="stat-box"><div class="val" id="perf-altura">—</div><div class="lbl">Altura (cm)</div></div>
+      <div class="stat-box"><div class="val">✓</div><div class="lbl">Ativo</div></div>
     </div>
 
     <div class="sec-head" style="margin-top:24px;"><h3>Dados <span>Pessoais</span></h3></div>
     <div class="card" style="border-left:none;padding:8px 20px;">
-      <div class="info-row"><span class="key">Nome completo</span><span class="val">José Lira</span></div>
-      <div class="info-row"><span class="key">E-mail</span><span class="val">aluno@equipeshadow.com</span></div>
-      <div class="info-row"><span class="key">Objetivo</span><span class="val">Ganho de Massa</span></div>
-      <div class="info-row"><span class="key">Treinos concluídos</span><span class="val">47</span></div>
-      <div class="info-row"><span class="key">Membro desde</span><span class="val">Janeiro 2026</span></div>
-      <div class="info-row"><span class="key">Sequência atual</span><span class="val">🔥 12 dias</span></div>
-      <div class="info-row" style="border:none;"><span class="key">Status</span><span class="badge badge-ok">Ativo</span></div>
+      <div class="info-row"><span class="key">Nome completo</span><span class="val" id="info-nome">—</span></div>
+      <div class="info-row"><span class="key">E-mail</span><span class="val" id="info-email">—</span></div>
+      <div class="info-row" style="border:none;"><span class="key">Objetivo</span><span class="val" id="info-objetivo">—</span></div>
     </div>
 
-    <a href="../index.html">
+    <div class="sec-head" style="margin-top:24px;"><h3>Atualizar <span>Perfil</span></h3></div>
+    <div class="card">
+      <div id="msg-perfil" style="display:none;font-size:.85rem;margin-bottom:12px;"></div>
+      <form id="form-perfil">
+        <div class="field">
+          <label>Nome</label>
+          <input type="text" id="upd-nome" placeholder="Seu nome"/>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Peso (kg)</label>
+            <input type="number" id="upd-peso" placeholder="80" step="0.1"/>
+          </div>
+          <div class="field">
+            <label>Altura (cm)</label>
+            <input type="number" id="upd-altura" placeholder="175"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Objetivo</label>
+          <select id="upd-objetivo">
+            <option>Ganho de Massa</option>
+            <option>Perda de Peso</option>
+            <option>Definição Muscular</option>
+            <option>Condicionamento</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary">SALVAR ALTERAÇÕES</button>
+      </form>
+    </div>
+
+    <a href="#" id="btn-sair2">
       <button class="btn-logout">SAIR DA CONTA</button>
     </a>
-
   </div>
 
   <footer>Equipe <span>Shadow</span> · IronZone · Programação para Web 2026</footer>
+
+  <script>
+    const token = localStorage.getItem('token')
+    if (!token) window.location.href = '../index.html'
+
+    const API = 'http://localhost:3333/api'
+    const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+
+    function sair(e) {
+      e.preventDefault()
+      localStorage.removeItem('token')
+      localStorage.removeItem('usuario')
+      window.location.href = '../index.html'
+    }
+    document.getElementById('btn-sair').addEventListener('click', sair)
+    document.getElementById('btn-sair2').addEventListener('click', sair)
+
+    fetch(`${API}/usuarios/perfil`, { headers })
+      .then(r => r.json())
+      .then(u => {
+        document.getElementById('perf-nome').textContent = u.nome || '—'
+        document.getElementById('perf-peso').textContent = u.peso || '—'
+        document.getElementById('perf-altura').textContent = u.altura || '—'
+        document.getElementById('info-nome').textContent = u.nome || '—'
+        document.getElementById('info-email').textContent = u.email || '—'
+        document.getElementById('info-objetivo').textContent = u.objetivo || '—'
+        document.getElementById('upd-nome').value = u.nome || ''
+        document.getElementById('upd-peso').value = u.peso || ''
+        document.getElementById('upd-altura').value = u.altura || ''
+        if (u.objetivo) document.getElementById('upd-objetivo').value = u.objetivo
+      })
+
+    document.getElementById('form-perfil').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const msg = document.getElementById('msg-perfil')
+      try {
+        const res = await fetch(`${API}/usuarios/perfil`, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({
+            nome: document.getElementById('upd-nome').value,
+            peso: parseFloat(document.getElementById('upd-peso').value) || null,
+            altura: parseInt(document.getElementById('upd-altura').value) || null,
+            objetivo: document.getElementById('upd-objetivo').value
+          })
+        })
+        const dados = await res.json()
+        if (!res.ok) throw new Error(dados.erro || 'Erro ao salvar')
+        localStorage.setItem('usuario', JSON.stringify(dados))
+        document.getElementById('perf-nome').textContent = dados.nome
+        document.getElementById('info-nome').textContent = dados.nome
+        document.getElementById('info-objetivo').textContent = dados.objetivo
+        document.getElementById('perf-peso').textContent = dados.peso
+        document.getElementById('perf-altura').textContent = dados.altura
+        msg.textContent = '✅ Perfil atualizado com sucesso!'
+        msg.style.color = '#00cc66'
+        msg.style.display = 'block'
+      } catch (err) {
+        msg.textContent = err.message
+        msg.style.color = '#ff4444'
+        msg.style.display = 'block'
+      }
+    })
+  </script>
 </body>
 </html>
