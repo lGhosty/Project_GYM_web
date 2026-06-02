@@ -1,4 +1,4 @@
-# FreakyZone — Equipe Shadow
+# FreakyZone — Equipe Freaky
 
 Plataforma de consultoria fitness desenvolvida para a disciplina de **Programação para Web**.
 
@@ -96,7 +96,7 @@ cd Project_Gym_web
 
 ### 2. Configure o banco de dados
 
-Abra o **pgAdmin**, crie um banco chamado `ironzone`, abra o **Query Tool** e execute o conteúdo do arquivo `server/src/config/schema.sql`.
+Abra o **pgAdmin**, crie um banco chamado `FreakyZone`, abra o **Query Tool** e execute o conteúdo do arquivo `server/src/config/schema.sql`.
 
 ### 3. Configure as variáveis de ambiente
 
@@ -112,7 +112,7 @@ Abra o `.env` e preencha com suas credenciais:
 ```
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=ironzone
+DB_NAME=freakyzone
 DB_USER=postgres
 DB_PASSWORD=sua_senha_aqui
 JWT_SECRET=segredo123
