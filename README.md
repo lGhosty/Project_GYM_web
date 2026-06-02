@@ -203,6 +203,14 @@ Abaixo está a representação visual das funcionalidades do sistema:
 
 ![Diagrama de Casos de Uso](./docs/diagrama_de_casos_de_uso.png)
 
+
+## 📊 Diagrama de Classes
+Abaixo está a representação visual das funcionalidades que represente o domínio da
+aplicação back-end:
+![Diagrama de Classes](./docs/diagrama_de_classes.png)
+
+
+
 ## 👨‍💻 Autor
 
 Desenvolvido por **Fernandes**
