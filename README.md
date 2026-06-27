@@ -1,197 +1,167 @@
-# FreakyZone — Equipe Freaky
+# 🏋️ FreakyZone — Plataforma de Gestão de Academia
 
-Plataforma de consultoria fitness desenvolvida para a disciplina de **Programação para Web**.
+> Projeto desenvolvido pela **Equipe Freaky** para a disciplina de Programação para Web 2026.
 
----
+## 📋 Descrição
 
-## Sobre o Projeto
+O **FreakyZone** é uma aplicação web completa para gestão de academias. Professores (admin) criam treinos, dietas e avaliações físicas para os alunos. Alunos acessam seu painel pessoal com treinos, dieta, agenda e histórico de avaliações.
 
-O FreakyZone é uma aplicação web completa integrada a uma API REST e banco de dados PostgreSQL. Permite que atletas gerenciem seus treinos, dieta e perfil de forma dinâmica.
+## 👥 Equipe Freaky
 
----
+| Nome | Função |
+|------|--------|
+| — | Front-end |
+| — | Back-end |
+| — | Banco de Dados |
+| — | Documentação |
 
-## Tecnologias Utilizadas
+## 🔑 Papéis no Sistema (RBAC)
 
-**Front-end**
-- HTML5, CSS3, JavaScript puro
+| Papel | Acesso |
+|-------|--------|
+| **Admin/Professor** | Cria treinos, dietas, avaliações, agendamentos e notificações para os alunos |
+| **Aluno** | Visualiza seus próprios treinos, dieta, agenda, avaliações e notificações |
 
-**Back-end**
-- Node.js + Express
-- JWT (autenticação)
-- bcryptjs (criptografia de senhas)
+**Login admin padrão:**
+- Email: `admin@freakyzone.com`
+- Senha: `admin123`
 
-**Banco de Dados**
-- PostgreSQL
+## 🚀 Tecnologias
 
-**Ferramentas**
-- Git & GitHub
-- Figma (prototipação)
-- pgAdmin (gerenciamento do banco)
-- nodemon (desenvolvimento)
+| Camada | Tecnologia |
+|--------|-----------|
+| Front-end | HTML5 + CSS3 + JavaScript (Fetch API) |
+| Back-end | Node.js + Express |
+| Banco de Dados | PostgreSQL |
+| Autenticação | JWT + RBAC |
+| Deploy Front | Vercel / Netlify |
+| Deploy Back | Railway / Render |
 
----
-
-## Estrutura de Diretórios
+## 📁 Estrutura do Projeto
 
 ```
 Project_Gym_web/
-├── index.html
-├── assets/
-│   └── css/
-│       └── style.css
+├── index.html              → Login
 ├── pages/
-│   ├── cadastro.html
-│   ├── home.html
-│   ├── treino.html
-│   ├── dieta.html
-│   └── perfil.html
-├── docs/
-│   ├── diagrama_de_casos_de_uso.png
-│   └── casos-de-uso-v2.md
-├── .gitignore
-├── README.md
-└── server/
-    ├── package.json
+│   ├── cadastro.html       → Cadastro de alunos
+│   ├── home.html           → Dashboard do aluno
+│   ├── treino.html         → Treinos do aluno
+│   ├── dieta.html          → Dieta do aluno
+│   ├── agenda.html         → Agenda do aluno
+│   ├── perfil.html         → Perfil do aluno
+│   └── admin.html          → Painel do professor/admin
+├── assets/css/style.css    → Estilos globais
+├── docs/                   → Diagramas
+└── server/                 → Back-end Node.js
+    ├── src/
+    │   ├── app.js
+    │   ├── config/
+    │   │   ├── database.js
+    │   │   └── schema.sql
+    │   ├── controllers/
+    │   │   ├── authController.js
+    │   │   ├── treinoController.js
+    │   │   ├── dietaController.js
+    │   │   ├── usuarioController.js
+    │   │   ├── avaliacaoController.js
+    │   │   ├── agendamentoController.js
+    │   │   └── notificacaoController.js
+    │   ├── middlewares/
+    │   │   ├── authMiddleware.js
+    │   │   └── rbacMiddleware.js
+    │   └── routes/
+    │       ├── authRoutes.js
+    │       ├── treinoRoutes.js
+    │       ├── dietaRoutes.js
+    │       ├── usuarioRoutes.js
+    │       ├── avaliacaoRoutes.js
+    │       ├── agendamentoRoutes.js
+    │       └── notificacaoRoutes.js
     ├── .env.example
-    └── src/
-        ├── app.js
-        ├── config/
-        │   ├── database.js
-        │   └── schema.sql
-        ├── controllers/
-        │   ├── authController.js
-        │   ├── treinoController.js
-        │   ├── dietaController.js
-        │   └── usuarioController.js
-        ├── middlewares/
-        │   └── authMiddleware.js
-        └── routes/
-            ├── authRoutes.js
-            ├── treinoRoutes.js
-            ├── dietaRoutes.js
-            └── usuarioRoutes.js
+    └── package.json
 ```
 
----
+## ⚙️ Como Executar Localmente
 
-## Pré-requisitos
+### 1. Criar o banco de dados
 
-Antes de rodar o projeto, instale na sua máquina:
-
-- [Node.js LTS](https://nodejs.org) — versão 18 ou superior
-- [PostgreSQL](https://www.postgresql.org/download/) — anote a senha definida na instalação
-
-> **Atenção:** os comandos abaixo devem ser executados no **Command Prompt (CMD)** do Windows, não no PowerShell. No VS Code, clique na seta ao lado do `+` no terminal e escolha **Command Prompt**.
-
----
-
-## Como Executar
-
-### 1. Clone o repositório
-
-```cmd
-git clone https://github.com/SEU_USUARIO/Project_Gym_web.git
-cd Project_Gym_web
+```bash
+psql -U postgres
+CREATE DATABASE freakyzone;
+\q
 ```
 
-### 2. Configure o banco de dados
+### 2. Criar as tabelas
 
-Abra o **pgAdmin**, crie um banco chamado `FreakyZone`, abra o **Query Tool** e execute o conteúdo do arquivo `server/src/config/schema.sql`.
+```bash
+psql -U postgres -d freakyzone -f server/src/config/schema.sql
+```
 
-### 3. Configure as variáveis de ambiente
+### 3. Configurar variáveis de ambiente
 
-Dentro da pasta `server/`, crie um arquivo `.env` baseado no `.env.example`:
-
-```cmd
+```bash
 cd server
-copy .env.example .env
+cp .env.example .env
+# Edite o .env com suas credenciais do PostgreSQL
 ```
 
-Abra o `.env` e preencha com suas credenciais:
+### 4. Instalar dependências e iniciar o servidor
 
-```
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=freakyzone
-DB_USER=postgres
-DB_PASSWORD=sua_senha_aqui
-JWT_SECRET=segredo123
-PORT=3333
-```
-
-### 4. Instale as dependências
-
-```cmd
+```bash
 npm install
-```
-
-### 5. Inicie o servidor
-
-```cmd
 npm run dev
 ```
 
-Se aparecer no terminal:
+### 5. Abrir o front-end
 
-```
-Servidor rodando na porta 3333
-PostgreSQL conectado!
-```
+Abra `index.html` no navegador ou use a extensão **Live Server** do VS Code.
 
-O projeto está funcionando. Acesse no navegador:
+> ⚠️ A variável `API_URL` nos arquivos HTML aponta para `http://localhost:3333/api` em desenvolvimento.
+> Em produção, substitua pela URL do deploy do back-end.
 
-```
-http://localhost:3333
-```
+## 🌐 Deploy
 
----
+| Serviço | URL |
+|---------|-----|
+| Front-end (Vercel) | *em breve* |
+| Back-end (Railway) | *em breve* |
 
-## Endpoints da API
+## 📡 Endpoints da API
 
-| Método | Endpoint | Descrição | Auth |
-|--------|----------|-----------|------|
-| POST | `/api/auth/cadastro` | Cadastrar usuário | Não |
-| POST | `/api/auth/login` | Fazer login | Não |
-| GET | `/api/treinos` | Listar treinos | Sim |
-| POST | `/api/treinos` | Cadastrar treino | Sim |
-| GET | `/api/dietas` | Listar refeições | Sim |
-| POST | `/api/dietas` | Adicionar refeição | Sim |
-| GET | `/api/usuarios/perfil` | Ver perfil | Sim |
-| PUT | `/api/usuarios/perfil` | Atualizar perfil | Sim |
+| Método | Endpoint | Papel | Descrição |
+|--------|----------|-------|-----------|
+| POST | /api/auth/cadastro | Público | Cadastrar novo aluno |
+| POST | /api/auth/login | Público | Login (aluno ou admin) |
+| GET | /api/treinos | Aluno | Listar seus treinos |
+| POST | /api/treinos | Admin | Criar treino para aluno |
+| PUT | /api/treinos/:id | Admin | Editar treino |
+| DELETE | /api/treinos/:id | Admin | Deletar treino |
+| GET | /api/dietas | Aluno | Listar sua dieta |
+| POST | /api/dietas | Admin | Adicionar refeição para aluno |
+| DELETE | /api/dietas/:id | Auth | Deletar refeição |
+| GET | /api/usuarios/perfil | Auth | Ver perfil |
+| PUT | /api/usuarios/perfil | Auth | Atualizar perfil |
+| GET | /api/usuarios/alunos | Admin | Listar todos os alunos |
+| GET | /api/avaliacoes | Auth | Listar avaliações |
+| POST | /api/avaliacoes | Admin | Criar avaliação física |
+| GET | /api/agendamentos | Auth | Listar agendamentos |
+| POST | /api/agendamentos | Admin | Criar agendamento |
+| PUT | /api/agendamentos/:id | Auth | Atualizar status |
+| GET | /api/notificacoes | Aluno | Listar notificações |
+| POST | /api/notificacoes | Admin | Enviar notificação |
+| PUT | /api/notificacoes/:id/ler | Aluno | Marcar como lida |
 
-> Rotas com **Auth: Sim** exigem o header `Authorization: Bearer <token>`.
-
----
-
-## Banco de Dados
-
-Tabelas criadas no PostgreSQL:
+## 🗄️ Banco de Dados
 
 | Tabela | Descrição |
 |--------|-----------|
-| `usuarios` | Dados dos usuários cadastrados |
-| `treinos` | Treinos vinculados a um usuário |
-| `exercicios` | Exercícios vinculados a um treino |
-| `dietas` | Refeições vinculadas a um usuário |
-
----
-
-## Casos de Uso
-
-| UC | Nome | Entrega |
-|----|------|---------|
-| UC01 | Efetuar Login | 01 |
-| UC02 | Efetuar Cadastro | 01 |
-| UC03 | Visualizar Painel | 01 |
-| UC04 | Consultar Treino | 01 |
-| UC05 | Consultar Dieta | 01 |
-| UC06 | Gerenciar Perfil | 01 |
-| UC07 | Cadastrar Treino | 02 |
-| UC08 | Adicionar Refeição | 02 |
-| UC09 | Atualizar Perfil | 02 |
-| UC10 | Listar Treinos via API | 02 |
-
----
+| usuarios | Dados de cadastro e autenticação (com campo role) |
+| treinos | Treinos atribuídos a cada aluno |
+| exercicios | Exercícios de cada treino |
+| dietas | Refeições do plano alimentar |
+| avaliacoes | Avaliações físicas periódicas *(Entrega 03)* |
+| agendamentos | Agenda de eventos e treinos *(Entrega 03)* |
+| notificacoes | Notificações do professor para o aluno *(Entrega 03)* |
 
 
 ## 🎨 Design do Projeto
