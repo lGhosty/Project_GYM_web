@@ -1,137 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dieta — Equipe Freaky</title>
-  <link rel="stylesheet" href="../assets/css/style.css"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dieta — FreakyZone</title>
+<link rel="stylesheet" href="../assets/css/style.css"/>
+<style>
+  .meal-card{background:var(--card);border:1px solid var(--brd);border-radius:10px;margin-bottom:10px;padding:16px;display:flex;align-items:center;gap:14px;}
+  .meal-icon{width:50px;height:50px;border-radius:10px;background:var(--brd);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+  .meal-info{flex:1;}
+  .meal-name{font-weight:700;font-size:.95rem;}
+  .meal-detail{font-size:.75rem;color:var(--mut);margin-top:3px;}
+  .meal-kcal{font-size:1.3rem;font-weight:900;color:var(--red);text-align:right;}
+  .meal-kcal span{display:block;font-family:inherit;font-size:.6rem;color:var(--mut);font-weight:400;}
+</style>
 </head>
 <body>
-  <nav class="navbar">
-    <a href="home.html" class="brand">FreakyZone</a>
-    <div class="nav-links">
-      <a href="home.html">Início</a>
-      <a href="treino.html">Treino</a>
-      <a href="dieta.html" class="active">Dieta</a>
-      <a href="perfil.html">Perfil</a>
-      <a href="#" id="btn-sair" class="sair">Sair</a>
-    </div>
-  </nav>
-
-  <div class="content">
-    <div class="page-header">
-      <div class="eyebrow">Nutrição · Hoje</div>
-      <h2>PLANO ALIMENTAR</h2>
-      <p id="total-kcal-header">Carregando...</p>
-    </div>
-
-    <div class="sec-head"><h3>Refeições do <span>Dia</span></h3></div>
-    <div id="lista-refeicoes">
-      <p style="color:var(--mut)">Carregando...</p>
-    </div>
-
-    <div class="sec-head" style="margin-top:32px;"><h3>Adicionar <span>Refeição</span></h3></div>
-    <div class="card">
-      <div id="msg-dieta" style="display:none;font-size:.85rem;margin-bottom:12px;"></div>
-      <form id="form-dieta">
-        <div class="field-row">
-          <div class="field">
-            <label>Nome da Refeição</label>
-            <input type="text" id="nome-ref" placeholder="Ex: Café da Manhã" required/>
-          </div>
-          <div class="field">
-            <label>Horário</label>
-            <input type="text" id="horario" placeholder="Ex: 07:00" required/>
-          </div>
-        </div>
-        <div class="field">
-          <label>Descrição</label>
-          <input type="text" id="descricao" placeholder="Ex: 4 ovos, aveia, banana"/>
-        </div>
-        <div class="field">
-          <label>Calorias (kcal)</label>
-          <input type="number" id="calorias" placeholder="Ex: 620" required/>
-        </div>
-        <button type="submit" class="btn-primary">ADICIONAR REFEIÇÃO</button>
-      </form>
-    </div>
+<nav class="navbar">
+  <a href="home.html" class="brand">FREAKYZONE</a>
+  <div class="nav-links">
+    <a href="home.html">Início</a>
+    <a href="treino.html">Treino</a>
+    <a href="dieta.html" class="active">Dieta</a>
+    <a href="agenda.html">Agenda</a>
+    <a href="perfil.html">Perfil</a>
+    <a href="#" onclick="logout()" class="sair">Sair</a>
   </div>
+</nav>
+<div class="content">
+  <div class="page-header">
+    <div class="eyebrow">Plano Alimentar</div>
+    <h2>SUA <span style="color:var(--red)">DIETA</span></h2>
+    <p id="total-header">Carregando...</p>
+  </div>
+  <div id="lista-refeicoes"><p style="color:var(--mut)">Carregando refeições...</p></div>
+</div>
+<footer>Equipe <span>Freaky</span> · FreakyZone</footer>
+<script>
+const API   = 'http://localhost:3333/api'
+const token = localStorage.getItem('token')
+if (!token) window.location.href = '../index.html'
+function hdrs() { return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } }
+const emojis = ['🌅','🥜','🍗','🥤','🍽️','🌙','🥗','🍎']
 
-  <footer>Equipe <span>Freaky</span> · FreakyZone · Programação para Web 2026</footer>
+async function carregarDieta() {
+  const el = document.getElementById('lista-refeicoes')
+  try {
+    const r = await fetch(`${API}/dietas`, { headers: hdrs() })
+    const { refeicoes, total_calorias } = await r.json()
+    document.getElementById('total-header').textContent = `Total: ${total_calorias} kcal · Plano do professor`
+    if (!refeicoes.length) { el.innerHTML = '<div class="card"><p>Nenhuma refeição cadastrada pelo professor ainda.</p></div>'; return }
+    el.innerHTML = refeicoes.map((r, i) => `
+      <div class="meal-card">
+        <div class="meal-icon">${emojis[i % emojis.length]}</div>
+        <div class="meal-info">
+          <div class="meal-name">${r.nome}${r.horario ? ' · ' + r.horario : ''}</div>
+          <div class="meal-detail">${r.descricao || ''}</div>
+        </div>
+        <div class="meal-kcal">${r.calorias || 0}<span>kcal</span></div>
+      </div>`).join('')
+  } catch { el.innerHTML = '<p style="color:var(--mut)">Erro ao carregar dieta.</p>' }
+}
 
-  <script>
-    const token = localStorage.getItem('token')
-    if (!token) window.location.href = '../index.html'
-
-    const API = 'http://localhost:3333/api'
-    const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-
-    const icones = ['🌅','🥜','🍗','🥤','🍽️','🌙','🥗','🍳']
-
-    document.getElementById('btn-sair').addEventListener('click', (e) => {
-      e.preventDefault()
-      localStorage.removeItem('token')
-      localStorage.removeItem('usuario')
-      window.location.href = '../index.html'
-    })
-
-    function carregarDieta() {
-      fetch(`${API}/dietas`, { headers })
-        .then(r => r.json())
-        .then(data => {
-          const refeicoes = data.refeicoes || []
-          const total = data.total_calorias || 0
-          document.getElementById('total-kcal-header').textContent = `${total} kcal · Meta diária`
-          const el = document.getElementById('lista-refeicoes')
-          if (!refeicoes.length) {
-            el.innerHTML = '<div class="meal-card"><div class="meal-info"><div class="meal-name" style="color:var(--mut)">Nenhuma refeição cadastrada ainda.</div></div></div>'
-            return
-          }
-          el.innerHTML = refeicoes.map((r, i) => `
-            <div class="meal-card">
-              <div class="meal-icon">${icones[i % icones.length]}</div>
-              <div class="meal-info">
-                <div class="meal-name">${r.nome}</div>
-                <div class="meal-detail">${r.descricao || ''} · ${r.horario || ''}</div>
-              </div>
-              <div class="meal-kcal">${r.calorias}<span>kcal</span></div>
-            </div>
-          `).join('')
-        })
-        .catch(() => {
-          document.getElementById('lista-refeicoes').innerHTML = '<p style="color:var(--mut)">Erro ao carregar refeições.</p>'
-        })
-    }
-
-    carregarDieta()
-
-    document.getElementById('form-dieta').addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const msg = document.getElementById('msg-dieta')
-      try {
-        const res = await fetch(`${API}/dietas`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            nome: document.getElementById('nome-ref').value,
-            descricao: document.getElementById('descricao').value,
-            horario: document.getElementById('horario').value,
-            calorias: parseInt(document.getElementById('calorias').value)
-          })
-        })
-        const dados = await res.json()
-        if (!res.ok) throw new Error(dados.erro || 'Erro ao adicionar')
-        msg.textContent = '✅ Refeição adicionada com sucesso!'
-        msg.style.color = '#00cc66'
-        msg.style.display = 'block'
-        e.target.reset()
-        carregarDieta()
-      } catch (err) {
-        msg.textContent = err.message
-        msg.style.color = '#ff4444'
-        msg.style.display = 'block'
-      }
-    })
-  </script>
+function logout() { localStorage.removeItem('token'); localStorage.removeItem('usuario'); window.location.href = '../index.html' }
+carregarDieta()
+</script>
 </body>
 </html>

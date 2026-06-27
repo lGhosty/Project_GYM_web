@@ -1,138 +1,77 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Treino — Equipe Freaky</title>
-  <link rel="stylesheet" href="../assets/css/style.css"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Treino — FreakyZone</title>
+<link rel="stylesheet" href="../assets/css/style.css"/>
+<style>
+  .ex-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--brd);}
+  .ex-row:last-child{border-bottom:none;}
+  .ex-num{font-size:1.2rem;font-weight:900;color:var(--red);min-width:28px;}
+  .ex-info{flex:1;}
+  .ex-name{font-weight:700;font-size:.95rem;}
+  .ex-detail{font-size:.75rem;color:var(--mut);margin-top:2px;}
+  .ex-tag{background:var(--brd);color:var(--mut);border-radius:5px;padding:3px 8px;font-size:.62rem;font-weight:700;text-transform:uppercase;white-space:nowrap;}
+</style>
 </head>
 <body>
-  <nav class="navbar">
-    <a href="home.html" class="brand">FreakyZone</a>
-    <div class="nav-links">
-      <a href="home.html">Início</a>
-      <a href="treino.html" class="active">Treino</a>
-      <a href="dieta.html">Dieta</a>
-      <a href="perfil.html">Perfil</a>
-      <a href="#" id="btn-sair" class="sair">Sair</a>
-    </div>
-  </nav>
-
-  <div class="content">
-    <div class="page-header">
-      <div class="eyebrow">Seus treinos cadastrados</div>
-      <h2>TREINOS</h2>
-      <p>Consulte e cadastre seus treinos</p>
-    </div>
-
-    <div id="lista-treinos">
-      <p style="color:var(--mut)">Carregando...</p>
-    </div>
-
-    <div class="sec-head" style="margin-top:32px;"><h3>Cadastrar <span>Novo Treino</span></h3></div>
-    <div class="card">
-      <div id="msg-treino" style="display:none;font-size:.85rem;margin-bottom:12px;"></div>
-      <form id="form-treino">
-        <div class="field">
-          <label>Nome do Treino</label>
-          <input type="text" id="nome-treino" placeholder="Ex: Peito e Tríceps" required/>
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label>Dia da Semana</label>
-            <input type="text" id="dia-semana" placeholder="Ex: Segunda" required/>
-          </div>
-          <div class="field">
-            <label>Duração (min)</label>
-            <input type="number" id="duracao" placeholder="Ex: 60" required/>
-          </div>
-        </div>
-        <button type="submit" class="btn-primary">CADASTRAR TREINO</button>
-      </form>
-    </div>
+<nav class="navbar">
+  <a href="home.html" class="brand">FREAKYZONE</a>
+  <div class="nav-links">
+    <a href="home.html">Início</a>
+    <a href="treino.html" class="active">Treino</a>
+    <a href="dieta.html">Dieta</a>
+    <a href="agenda.html">Agenda</a>
+    <a href="perfil.html">Perfil</a>
+    <a href="#" onclick="logout()" class="sair">Sair</a>
   </div>
+</nav>
+<div class="content">
+  <div class="page-header">
+    <div class="eyebrow">Seus Treinos</div>
+    <h2>PLANO DE <span style="color:var(--red)">TREINO</span></h2>
+    <p>Treinos criados pelo seu professor</p>
+  </div>
+  <div id="lista-treinos"><p style="color:var(--mut)">Carregando treinos...</p></div>
+</div>
+<footer>Equipe <span>Freaky</span> · FreakyZone</footer>
+<script>
+const API   = 'http://localhost:3333/api'
+const token = localStorage.getItem('token')
+if (!token) window.location.href = '../index.html'
+function hdrs() { return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } }
 
-  <footer>Equipe <span>Freaky</span> · FreakyZone · Programação para Web 2026</footer>
+async function carregarTreinos() {
+  const el = document.getElementById('lista-treinos')
+  try {
+    const r = await fetch(`${API}/treinos`, { headers: hdrs() })
+    const treinos = await r.json()
+    if (!treinos.length) { el.innerHTML = '<div class="card"><p>Nenhum treino cadastrado pelo professor ainda.</p></div>'; return }
+    el.innerHTML = treinos.map(t => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:22px 0 10px;">
+        <h3 style="font-size:1.3rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;">${t.nome}</h3>
+        <span class="badge badge-red">${t.dia_semana} · ${t.duracao_min || '?'}min</span>
+      </div>
+      <div class="card" style="padding:8px 16px;">
+        ${t.exercicios && t.exercicios.length
+          ? t.exercicios.map((ex, i) => `
+              <div class="ex-row">
+                <div class="ex-num">${String(i + 1).padStart(2, '0')}</div>
+                <div class="ex-info">
+                  <div class="ex-name">${ex.nome}</div>
+                  <div class="ex-detail">${ex.series} séries × ${ex.repeticoes} reps · ${ex.descanso_s || '?'}s descanso</div>
+                </div>
+                <div class="ex-tag">${ex.grupo || 'Geral'}</div>
+              </div>`).join('')
+          : '<p style="color:var(--mut);padding:10px 0;">Nenhum exercício cadastrado.</p>'
+        }
+      </div>`).join('')
+  } catch { el.innerHTML = '<p style="color:var(--mut)">Erro ao carregar treinos.</p>' }
+}
 
-  <script>
-    const token = localStorage.getItem('token')
-    if (!token) window.location.href = '../index.html'
-
-    const API = 'http://localhost:3333/api'
-    const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-
-    document.getElementById('btn-sair').addEventListener('click', (e) => {
-      e.preventDefault()
-      localStorage.removeItem('token')
-      localStorage.removeItem('usuario')
-      window.location.href = '../index.html'
-    })
-
-    function carregarTreinos() {
-      fetch(`${API}/treinos`, { headers })
-        .then(r => r.json())
-        .then(treinos => {
-          const el = document.getElementById('lista-treinos')
-          if (!treinos.length) {
-            el.innerHTML = '<div class="card"><p style="color:var(--mut)">Nenhum treino cadastrado ainda.</p></div>'
-            return
-          }
-          el.innerHTML = treinos.map(t => `
-            <div class="card" style="padding:8px 16px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <h3 style="margin:0;">💪 ${t.nome}</h3>
-                <span class="badge badge-red">${t.dia_semana}</span>
-              </div>
-              <p style="color:var(--mut);font-size:.83rem;">${t.duracao_min} minutos</p>
-              ${t.exercicios && t.exercicios.length ? `
-                <div style="margin-top:8px;">
-                  ${t.exercicios.map((ex, i) => `
-                    <div class="ex-row">
-                      <div class="ex-num">${String(i+1).padStart(2,'0')}</div>
-                      <div class="ex-info">
-                        <div class="ex-name">${ex.nome}</div>
-                        <div class="ex-detail">${ex.series} séries × ${ex.repeticoes} reps</div>
-                      </div>
-                    </div>
-                  `).join('')}
-                </div>` : ''}
-            </div>
-          `).join('')
-        })
-        .catch(() => {
-          document.getElementById('lista-treinos').innerHTML = '<div class="card"><p style="color:var(--mut)">Erro ao carregar treinos.</p></div>'
-        })
-    }
-
-    carregarTreinos()
-
-    document.getElementById('form-treino').addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const msg = document.getElementById('msg-treino')
-      try {
-        const res = await fetch(`${API}/treinos`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            nome: document.getElementById('nome-treino').value,
-            dia_semana: document.getElementById('dia-semana').value,
-            duracao_min: parseInt(document.getElementById('duracao').value),
-            exercicios: []
-          })
-        })
-        const dados = await res.json()
-        if (!res.ok) throw new Error(dados.erro || 'Erro ao cadastrar')
-        msg.textContent = '✅ Treino cadastrado com sucesso!'
-        msg.style.color = '#00cc66'
-        msg.style.display = 'block'
-        e.target.reset()
-        carregarTreinos()
-      } catch (err) {
-        msg.textContent = err.message
-        msg.style.color = '#ff4444'
-        msg.style.display = 'block'
-      }
-    })
-  </script>
+function logout() { localStorage.removeItem('token'); localStorage.removeItem('usuario'); window.location.href = '../index.html' }
+carregarTreinos()
+</script>
 </body>
 </html>
