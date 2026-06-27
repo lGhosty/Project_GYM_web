@@ -1,40 +1,42 @@
-const pool = require('../config/database')
+const DietaService = require('../services/DietaService')
 
-async function listarDieta(req, res) {
-  try {
-    const result = await pool.query(
-      'SELECT * FROM dietas WHERE usuario_id = $1 ORDER BY horario',
-      [req.usuarioId]
-    )
+class DietaController {
 
-    const totalCalorias = result.rows.reduce((soma, r) => soma + (r.calorias || 0), 0)
-
-    res.json({ refeicoes: result.rows, total_calorias: totalCalorias })
-
-  } catch (err) {
-    res.status(500).json({ erro: 'Erro interno do servidor.' })
-  }
-}
-
-async function adicionarRefeicao(req, res) {
-  try {
-    const { nome, descricao, horario, calorias } = req.body
-
-    if (!nome) {
-      return res.status(400).json({ erro: 'Nome da refeicao e obrigatorio.' })
+  async listar(req, res) {
+    try {
+      const resultado = await DietaService.listarDieta(req.usuarioId)
+      return res.json(resultado)
+    } catch (err) {
+      return res.status(err.status || 500).json({ erro: err.mensagem || 'Erro interno.' })
     }
+  }
 
-    const result = await pool.query(
-      `INSERT INTO dietas (usuario_id, nome, descricao, horario, calorias)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [req.usuarioId, nome, descricao, horario, calorias]
-    )
+  async adicionar(req, res) {
+    try {
+      const { usuario_id, nome, descricao, horario, calorias } = req.body
+      const refeicao = await DietaService.adicionarRefeicao({
+        usuarioId: usuario_id,
+        adminId:   req.usuarioId,
+        nome,
+        descricao,
+        horario,
+        calorias,
+      })
+      return res.status(201).json(refeicao)
+    } catch (err) {
+      return res.status(err.status || 500).json({ erro: err.mensagem || 'Erro interno.' })
+    }
+  }
 
-    res.status(201).json(result.rows[0])
-
-  } catch (err) {
-    res.status(500).json({ erro: 'Erro interno do servidor.' })
+  async deletar(req, res) {
+    try {
+      const isAdmin = req.usuarioRole === 'admin'
+      const refeicao = await DietaService.deletarRefeicao(req.params.id, req.usuarioId, isAdmin)
+      return res.json({ mensagem: `Refeição "${refeicao.nome}" deletada.` })
+    } catch (err) {
+      return res.status(err.status || 500).json({ erro: err.mensagem || 'Erro interno.' })
+    }
   }
 }
 
-module.exports = { listarDieta, adicionarRefeicao }
+module.exports = new DietaController()

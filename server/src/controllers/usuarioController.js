@@ -1,43 +1,33 @@
-const pool = require('../config/database')
+const UsuarioService = require('../services/UsuarioService')
 
-async function verPerfil(req, res) {
-  try {
-    const result = await pool.query(
-      'SELECT id, nome, email, peso, altura, objetivo, criado_em FROM usuarios WHERE id = $1',
-      [req.usuarioId]
-    )
+class UsuarioController {
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ erro: 'Usuario nao encontrado.' })
+  async buscarPerfil(req, res) {
+    try {
+      const usuario = await UsuarioService.buscarPerfil(req.usuarioId)
+      return res.json(usuario)
+    } catch (err) {
+      return res.status(err.status || 500).json({ erro: err.mensagem || 'Erro interno.' })
     }
+  }
 
-    res.json(result.rows[0])
+  async atualizarPerfil(req, res) {
+    try {
+      const usuario = await UsuarioService.atualizarPerfil(req.usuarioId, req.body)
+      return res.json(usuario)
+    } catch (err) {
+      return res.status(err.status || 500).json({ erro: err.mensagem || 'Erro interno.' })
+    }
+  }
 
-  } catch (err) {
-    res.status(500).json({ erro: 'Erro interno do servidor.' })
+  async listarAlunos(req, res) {
+    try {
+      const alunos = await UsuarioService.listarAlunos()
+      return res.json(alunos)
+    } catch (err) {
+      return res.status(err.status || 500).json({ erro: err.mensagem || 'Erro interno.' })
+    }
   }
 }
 
-async function atualizarPerfil(req, res) {
-  try {
-    const { nome, peso, altura, objetivo } = req.body
-
-    const result = await pool.query(
-      `UPDATE usuarios SET
-        nome     = COALESCE($1, nome),
-        peso     = COALESCE($2, peso),
-        altura   = COALESCE($3, altura),
-        objetivo = COALESCE($4, objetivo)
-       WHERE id = $5
-       RETURNING id, nome, email, peso, altura, objetivo`,
-      [nome, peso, altura, objetivo, req.usuarioId]
-    )
-
-    res.json(result.rows[0])
-
-  } catch (err) {
-    res.status(500).json({ erro: 'Erro interno do servidor.' })
-  }
-}
-
-module.exports = { verPerfil, atualizarPerfil }
+module.exports = new UsuarioController()

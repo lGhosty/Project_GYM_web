@@ -1,62 +1,50 @@
-const pool = require('../config/database')
+const TreinoService = require('../services/TreinoService')
 
-async function listarTreinos(req, res) {
-  try {
-    const treinos = await pool.query(
-      'SELECT * FROM treinos WHERE usuario_id = $1 ORDER BY id',
-      [req.usuarioId]
-    )
+class TreinoController {
 
-    const treinosComExercicios = await Promise.all(
-      treinos.rows.map(async (treino) => {
-        const exercicios = await pool.query(
-          'SELECT * FROM exercicios WHERE treino_id = $1 ORDER BY id',
-          [treino.id]
-        )
-        return { ...treino, exercicios: exercicios.rows }
+  async listar(req, res) {
+    try {
+      const treinos = await TreinoService.listarTreinos(req.usuarioId)
+      return res.json(treinos)
+    } catch (err) {
+      return res.status(err.status || 500).json({ erro: err.mensagem || 'Erro interno.' })
+    }
+  }
+
+  async criar(req, res) {
+    try {
+      const { usuario_id, nome, dia_semana, duracao_min, exercicios } = req.body
+      const treino = await TreinoService.criarTreino({
+        usuarioId:   usuario_id,
+        adminId:     req.usuarioId,
+        nome,
+        diaSemana:   dia_semana,
+        duracaoMin:  duracao_min,
+        exercicios,
       })
-    )
+      return res.status(201).json(treino)
+    } catch (err) {
+      return res.status(err.status || 500).json({ erro: err.mensagem || 'Erro interno.' })
+    }
+  }
 
-    res.json(treinosComExercicios)
+  async editar(req, res) {
+    try {
+      const treino = await TreinoService.editarTreino(req.params.id, req.body)
+      return res.json(treino)
+    } catch (err) {
+      return res.status(err.status || 500).json({ erro: err.mensagem || 'Erro interno.' })
+    }
+  }
 
-  } catch (err) {
-    res.status(500).json({ erro: 'Erro interno do servidor.' })
+  async deletar(req, res) {
+    try {
+      const treino = await TreinoService.deletarTreino(req.params.id)
+      return res.json({ mensagem: `Treino "${treino.nome}" deletado com sucesso.` })
+    } catch (err) {
+      return res.status(err.status || 500).json({ erro: err.mensagem || 'Erro interno.' })
+    }
   }
 }
 
-async function criarTreino(req, res) {
-  try {
-    const { nome, dia_semana, duracao_min, exercicios } = req.body
-
-    if (!nome || !dia_semana) {
-      return res.status(400).json({ erro: 'Nome e dia da semana sao obrigatorios.' })
-    }
-
-    const result = await pool.query(
-      `INSERT INTO treinos (usuario_id, nome, dia_semana, duracao_min)
-       VALUES ($1, $2, $3, $4) RETURNING *`,
-      [req.usuarioId, nome, dia_semana, duracao_min]
-    )
-
-    const treino = result.rows[0]
-
-    if (exercicios && exercicios.length > 0) {
-      for (const ex of exercicios) {
-        await pool.query(
-          `INSERT INTO exercicios (treino_id, nome, series, repeticoes, descanso_s, grupo)
-           VALUES ($1, $2, $3, $4, $5, $6)`,
-          [treino.id, ex.nome, ex.series, ex.repeticoes, ex.descanso_s, ex.grupo]
-        )
-      }
-    }
-
-    const exResult = await pool.query('SELECT * FROM exercicios WHERE treino_id = $1', [treino.id])
-
-    res.status(201).json({ ...treino, exercicios: exResult.rows })
-
-  } catch (err) {
-    res.status(500).json({ erro: 'Erro interno do servidor.' })
-  }
-}
-
-module.exports = { listarTreinos, criarTreino }
+module.exports = new TreinoController()
