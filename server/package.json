@@ -1,7 +1,7 @@
 {
   "name": "freakyzone-server",
-  "version": "1.0.0",
-  "description": "API REST FreakyZone - Equipe Freaky",
+  "version": "3.0.0",
+  "description": "API REST FreakyZone - Arquitetura MVC em camadas",
   "main": "src/app.js",
   "scripts": {
     "dev": "nodemon src/app.js",

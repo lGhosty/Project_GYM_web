@@ -1,27 +1,28 @@
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-function authMiddleware(req, res, next) {
+module.exports = function authMiddleware(req, res, next) {
   const authHeader = req.headers['authorization']
 
   if (!authHeader) {
-    return res.status(401).json({ erro: 'Token nao fornecido.' })
+    return res.status(401).json({ erro: 'Token não fornecido.' })
   }
 
-  const parts = authHeader.split(' ')
-  if (parts.length !== 2 || parts[0] !== 'Bearer') {
-    return res.status(401).json({ erro: 'Token mal formatado.' })
-  }
+  const [tipo, token] = authHeader.split(' ')
 
-  const token = parts[1]
+  if (tipo !== 'Bearer' || !token) {
+    return res.status(401).json({ erro: 'Token mal formatado. Use: Bearer <token>' })
+  }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ erro: 'Token invalido ou expirado.' })
+      return res.status(401).json({ erro: 'Token inválido ou expirado.' })
     }
-    req.usuarioId = decoded.id
+
+    // Injeta os dados do usuário logado na requisição
+    req.usuarioId   = decoded.id
+    req.usuarioRole = decoded.role
+
     next()
   })
 }
-
-module.exports = authMiddleware
