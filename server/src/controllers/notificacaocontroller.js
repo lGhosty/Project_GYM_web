@@ -1,5 +1,3 @@
-// src/controllers/NotificacaoController.js
-
 const NotificacaoService = require('../services/NotificacaoService')
 
 class NotificacaoController {
