@@ -1,0 +1,258 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { API_URL, getAuthHeaders, getUsuario } from '../../services/api'
+
+type Usuario = {
+  id?: number
+  nome?: string
+  email?: string
+  role?: string
+  tipo?: string
+}
+
+type Exercicio = {
+  id?: number
+  nome?: string
+  series?: number
+  repeticoes?: number
+  descanso_s?: number
+  grupo?: string
+}
+
+type Treino = {
+  id: number
+  nome: string
+  dia_semana?: string
+  duracao_min?: number
+  exercicios?: Exercicio[] | string
+}
+
+export default function TreinosPage() {
+  const router = useRouter()
+
+  const [usuario, setUsuario] = useState<Usuario | null>(null)
+  const [treinos, setTreinos] = useState<Treino[]>([])
+  const [erro, setErro] = useState('')
+  const [carregando, setCarregando] = useState(true)
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    const usuarioSalvo = getUsuario()
+
+    if (!token || !usuarioSalvo) {
+      router.push('/login')
+      return
+    }
+
+    setUsuario(usuarioSalvo)
+    carregarTreinos()
+  }, [router])
+
+  async function carregarTreinos() {
+    try {
+      const resposta = await fetch(`${API_URL}/treinos`, {
+        headers: getAuthHeaders()
+      })
+
+      const dados = await resposta.json()
+
+      if (!resposta.ok) {
+        setErro(dados.erro || 'Erro ao carregar treinos.')
+        return
+      }
+
+      setTreinos(Array.isArray(dados) ? dados : [])
+    } catch {
+      setErro('Não foi possível conectar com o servidor.')
+    } finally {
+      setCarregando(false)
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('token')
+    localStorage.removeItem('usuario')
+    router.push('/login')
+  }
+
+  function formatarExercicios(exercicios?: Exercicio[] | string): Exercicio[] {
+    if (!exercicios) {
+      return []
+    }
+
+    if (Array.isArray(exercicios)) {
+      return exercicios
+    }
+
+    try {
+      const convertido = JSON.parse(exercicios)
+      return Array.isArray(convertido) ? convertido : []
+    } catch {
+      return []
+    }
+  }
+
+  return (
+    <main className="min-h-screen bg-black text-white">
+      <nav className="border-b-2 border-red-600 bg-zinc-950 px-8 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <span className="text-red-600 font-black text-2xl tracking-widest">
+            FREAKYZONE
+          </span>
+
+          <span className="bg-zinc-800 text-zinc-300 text-xs font-bold px-3 py-1 rounded">
+            ALUNO
+          </span>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => router.push('/home')}
+            className="text-zinc-400 hover:text-white transition"
+          >
+            Home
+          </button>
+
+          <button
+            onClick={() => router.push('/treinos')}
+            className="text-white font-bold"
+          >
+            Treinos
+          </button>
+
+          <button
+            onClick={() => router.push('/dietas')}
+            className="text-zinc-400 hover:text-white transition"
+          >
+            Dietas
+          </button>
+
+          <button
+            onClick={() => router.push('/agenda')}
+            className="text-zinc-400 hover:text-white transition"
+          >
+            Agenda
+          </button>
+
+          <button
+            onClick={logout}
+            className="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white px-4 py-2 rounded-lg transition"
+          >
+            Sair
+          </button>
+        </div>
+      </nav>
+
+      <section className="max-w-6xl mx-auto px-6 py-10">
+        <div className="mb-8">
+          <h1 className="text-3xl font-black">
+            Meus Treinos
+          </h1>
+
+          <p className="text-zinc-500 mt-1">
+            Veja os treinos cadastrados para você, {usuario?.nome || 'aluno'}.
+          </p>
+        </div>
+
+        {erro && (
+          <div className="mb-6 border border-red-600 bg-red-600/10 text-red-500 rounded-xl p-4">
+            {erro}
+          </div>
+        )}
+
+        {carregando ? (
+          <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
+            <p className="text-zinc-500">Carregando treinos...</p>
+          </div>
+        ) : treinos.length === 0 ? (
+          <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
+            <p className="text-zinc-500">
+              Nenhum treino cadastrado para este aluno.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-5">
+            {treinos.map((treino) => {
+              const exercicios = formatarExercicios(treino.exercicios)
+
+              return (
+                <div
+                  key={treino.id}
+                  className="bg-zinc-950 border border-zinc-800 rounded-xl p-6"
+                >
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-5">
+                    <div>
+                      <h2 className="text-2xl font-black text-red-600">
+                        {treino.nome}
+                      </h2>
+
+                      <p className="text-zinc-500 text-sm mt-1">
+                        {treino.dia_semana || 'Dia não informado'} ·{' '}
+                        {treino.duracao_min || '-'} min
+                      </p>
+                    </div>
+
+                    <span className="bg-red-600/10 border border-red-600 text-red-500 text-xs font-bold uppercase px-3 py-1 rounded">
+                      Treino
+                    </span>
+                  </div>
+
+                  {exercicios.length === 0 ? (
+                    <p className="text-zinc-500">
+                      Nenhum exercício cadastrado neste treino.
+                    </p>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {exercicios.map((exercicio, index) => (
+                        <div
+                          key={index}
+                          className="bg-black/40 border border-zinc-800 rounded-lg p-4"
+                        >
+                          <h3 className="font-bold mb-2">
+                            {exercicio.nome || `Exercício ${index + 1}`}
+                          </h3>
+
+                          <div className="text-sm text-zinc-500 space-y-1">
+                            <p>
+                              Grupo:{' '}
+                              <strong className="text-zinc-300">
+                                {exercicio.grupo || '-'}
+                              </strong>
+                            </p>
+
+                            <p>
+                              Séries:{' '}
+                              <strong className="text-zinc-300">
+                                {exercicio.series || '-'}
+                              </strong>
+                            </p>
+
+                            <p>
+                              Repetições:{' '}
+                              <strong className="text-zinc-300">
+                                {exercicio.repeticoes || '-'}
+                              </strong>
+                            </p>
+
+                            <p>
+                              Descanso:{' '}
+                              <strong className="text-zinc-300">
+                                {exercicio.descanso_s || '-'}s
+                              </strong>
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </section>
+    </main>
+  )
+}

@@ -61,7 +61,7 @@ export default function LoginPage() {
       if (perfil === 'admin' || perfil === 'professor') {
         router.push('/admin')
       } else {
-        router.push('/')
+        router.push('/home')
       }
     } catch {
       setErro('Não foi possível conectar com o servidor.')
