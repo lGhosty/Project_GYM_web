@@ -23,7 +23,7 @@ export default function CadastroPage() {
     setCarregando(true)
 
     try {
-      const resposta = await fetch(`${API_URL}/auth/register`, {
+      const resposta = await fetch(`${API_URL}/auth/cadastro`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
