@@ -1,23 +1,29 @@
-// src/config/database.js
-// Configuração central da conexão com PostgreSQL
-// O Pool gerencia um conjunto de conexões reutilizáveis (evita abrir/fechar a cada query)
-
 const { Pool } = require('pg')
 require('dotenv').config()
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 const pool = new Pool({
-  host:     process.env.DB_HOST,
-  port:     Number(process.env.DB_PORT),
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT || 5432),
   database: process.env.DB_NAME,
-  user:     process.env.DB_USER,
+  user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
+  ssl: isProduction
+    ? {
+        rejectUnauthorized: false
+      }
+    : false
 })
 
-pool.connect()
-  .then(client => {
-    console.log('✅ PostgreSQL conectado com sucesso!')
-    client.release() // libera a conexão de volta ao pool após o teste
+pool
+  .connect()
+  .then((client) => {
+    console.log('✅ Conectado ao banco PostgreSQL com sucesso!')
+    client.release()
   })
-  .catch(err => console.error('❌ Erro ao conectar ao banco:', err.message))
+  .catch((error) => {
+    console.error('❌ Erro ao conectar ao banco:', error.message)
+  })
 
 module.exports = pool
