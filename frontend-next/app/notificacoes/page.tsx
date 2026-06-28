@@ -13,19 +13,20 @@ type Usuario = {
   tipo?: string
 }
 
-type Dieta = {
+type Notificacao = {
   id: number
-  nome: string
-  horario?: string
-  calorias?: number
-  descricao?: string
+  titulo: string
+  mensagem: string
+  lida?: boolean
+  criada_em?: string
+  created_at?: string
 }
 
-export default function DietasPage() {
+export default function NotificacoesPage() {
   const router = useRouter()
 
   const [usuario, setUsuario] = useState<Usuario | null>(null)
-  const [dietas, setDietas] = useState<Dieta[]>([])
+  const [notificacoes, setNotificacoes] = useState<Notificacao[]>([])
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(true)
 
@@ -39,23 +40,23 @@ export default function DietasPage() {
     }
 
     setUsuario(usuarioSalvo)
-    carregarDietas()
+    carregarNotificacoes()
   }, [router])
 
-  async function carregarDietas() {
+  async function carregarNotificacoes() {
     try {
-      const resposta = await fetch(`${API_URL}/dietas`, {
+      const resposta = await fetch(`${API_URL}/notificacoes`, {
         headers: getAuthHeaders()
       })
 
       const dados = await resposta.json()
 
       if (!resposta.ok) {
-        setErro(dados.erro || 'Erro ao carregar dietas.')
+        setErro(dados.erro || 'Erro ao carregar notificações.')
         return
       }
 
-      setDietas(Array.isArray(dados) ? dados : [])
+      setNotificacoes(Array.isArray(dados) ? dados : [])
     } catch {
       setErro('Não foi possível conectar com o servidor.')
     } finally {
@@ -69,6 +70,19 @@ export default function DietasPage() {
     router.push('/login')
   }
 
+  function formatarData(notificacao: Notificacao) {
+    const data = notificacao.criada_em || notificacao.created_at
+
+    if (!data) {
+      return 'Data não informada'
+    }
+
+    return new Date(data).toLocaleString('pt-BR', {
+      dateStyle: 'short',
+      timeStyle: 'short'
+    })
+  }
+
   return (
     <main className="min-h-screen bg-black text-white">
       <AlunoNavbar />
@@ -76,11 +90,11 @@ export default function DietasPage() {
       <section className="max-w-6xl mx-auto px-6 py-10">
         <div className="mb-8">
           <h1 className="text-3xl font-black">
-            Minha Dieta
+            Notificações
           </h1>
 
           <p className="text-zinc-500 mt-1">
-            Veja as refeições cadastradas para você, {usuario?.nome || 'aluno'}.
+            Veja os avisos enviados para você, {usuario?.nome || 'aluno'}.
           </p>
         </div>
 
@@ -92,40 +106,46 @@ export default function DietasPage() {
 
         {carregando ? (
           <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
-            <p className="text-zinc-500">Carregando dieta...</p>
+            <p className="text-zinc-500">Carregando notificações...</p>
           </div>
-        ) : dietas.length === 0 ? (
+        ) : notificacoes.length === 0 ? (
           <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
             <p className="text-zinc-500">
-              Nenhuma refeição cadastrada para este aluno.
+              Nenhuma notificação recebida.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {dietas.map((dieta) => (
+          <div className="space-y-5">
+            {notificacoes.map((notificacao) => (
               <div
-                key={dieta.id}
+                key={notificacao.id}
                 className="bg-zinc-950 border border-zinc-800 rounded-xl p-6"
               >
-                <div className="flex items-start justify-between gap-4 mb-4">
-                  <div>
-                    <h2 className="text-2xl font-black text-red-600">
-                      {dieta.nome}
-                    </h2>
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+                  <h2 className="text-xl font-black text-red-600">
+                    {notificacao.titulo}
+                  </h2>
 
-                    <p className="text-zinc-500 text-sm mt-1">
-                      Horário: {dieta.horario || 'Não informado'}
-                    </p>
-                  </div>
-
-                  <span className="bg-red-600/10 border border-red-600 text-red-500 text-xs font-bold uppercase px-3 py-1 rounded">
-                    {dieta.calorias || 0} kcal
+                  <span className="text-xs text-zinc-500">
+                    {formatarData(notificacao)}
                   </span>
                 </div>
 
                 <p className="text-zinc-400">
-                  {dieta.descricao || 'Sem descrição cadastrada.'}
+                  {notificacao.mensagem}
                 </p>
+
+                <div className="mt-4">
+                  <span
+                    className={`text-xs font-bold uppercase border rounded px-3 py-1 ${
+                      notificacao.lida
+                        ? 'border-green-500 text-green-500 bg-green-500/10'
+                        : 'border-yellow-400 text-yellow-400 bg-yellow-400/10'
+                    }`}
+                  >
+                    {notificacao.lida ? 'Lida' : 'Nova'}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
