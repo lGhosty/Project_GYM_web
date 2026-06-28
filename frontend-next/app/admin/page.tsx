@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation'
 import { getUsuario } from '../../services/api'
 import AlunosTab from '../../components/admin/AlunosTab'
 import TreinosTab from '../../components/admin/TreinosTab'
+import DietasTab from '../../components/admin/DietasTab'
+import AvaliacoesTab from '../../components/admin/AvaliacoesTab'
+import AgendaTab from '../../components/admin/AgendaTab'
 
 type Usuario = {
   id?: number
@@ -116,7 +119,13 @@ export default function AdminPage() {
 
         {abaAtiva === 'treinos' && <TreinosTab />}
 
-        {abaAtiva !== 'alunos' && abaAtiva !== 'treinos' && (
+        {abaAtiva === 'dietas' && <DietasTab />}
+
+        {abaAtiva === 'avaliacoes' && <AvaliacoesTab />}
+
+        {abaAtiva === 'agenda' && <AgendaTab />}
+
+        {abaAtiva !== 'alunos' && abaAtiva !== 'treinos' && abaAtiva !== 'dietas' &&  abaAtiva !== 'avaliacoes' &&  abaAtiva !== 'agenda' &&(
           <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
             <p className="text-zinc-500">
               Aba em construção. Próximo passo: implementar {abaAtiva}.
