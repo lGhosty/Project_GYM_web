@@ -125,6 +125,12 @@ export default function LoginPage() {
             {carregando ? 'ENTRANDO...' : 'ENTRAR'}
           </button>
         </form>
+        <button
+          onClick={() => router.push('/cadastro')}
+          className="w-full mt-4 text-zinc-500 hover:text-white text-sm transition"
+        >
+          Não tenho conta. Criar cadastro.
+        </button>
       </section>
     </main>
   )
