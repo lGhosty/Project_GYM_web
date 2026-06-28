@@ -1,5 +1,7 @@
 'use client'
 
+/* eslint-disable react-hooks/set-state-in-effect */
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getUsuario } from '../../services/api'
@@ -21,7 +23,7 @@ export default function PerfilPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    const usuarioSalvo = getUsuario()
+    const usuarioSalvo = getUsuario() as Usuario | null
 
     if (!token || !usuarioSalvo) {
       router.push('/login')
@@ -30,12 +32,6 @@ export default function PerfilPage() {
 
     setUsuario(usuarioSalvo)
   }, [router])
-
-  function logout() {
-    localStorage.removeItem('token')
-    localStorage.removeItem('usuario')
-    router.push('/login')
-  }
 
   return (
     <main className="min-h-screen bg-black text-white">

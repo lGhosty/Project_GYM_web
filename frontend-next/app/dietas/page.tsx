@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+/* eslint-disable react-hooks/set-state-in-effect */
+
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { API_URL, getAuthHeaders, getUsuario } from '../../services/api'
 import AlunoNavbar from '../../components/aluno/AlunoNavbar'
@@ -24,25 +26,12 @@ type Dieta = {
 export default function DietasPage() {
   const router = useRouter()
 
-  const [usuario, setUsuario] = useState<Usuario | null>(null)
+  const [usuario] = useState<Usuario | null>(() => getUsuario() as Usuario | null)
   const [dietas, setDietas] = useState<Dieta[]>([])
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(true)
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    const usuarioSalvo = getUsuario()
-
-    if (!token || !usuarioSalvo) {
-      router.push('/login')
-      return
-    }
-
-    setUsuario(usuarioSalvo)
-    carregarDietas()
-  }, [router])
-
-  async function carregarDietas() {
+  const carregarDietas = useCallback(async () => {
     try {
       const resposta = await fetch(`${API_URL}/dietas`, {
         headers: getAuthHeaders()
@@ -61,13 +50,18 @@ export default function DietasPage() {
     } finally {
       setCarregando(false)
     }
-  }
+  }, [])
 
-  function logout() {
-    localStorage.removeItem('token')
-    localStorage.removeItem('usuario')
-    router.push('/login')
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+
+    if (!token || !usuario) {
+      router.push('/login')
+      return
+    }
+
+    carregarDietas()
+  }, [router, usuario, carregarDietas])
 
   return (
     <main className="min-h-screen bg-black text-white">

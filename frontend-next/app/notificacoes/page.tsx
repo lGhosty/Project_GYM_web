@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+/* eslint-disable react-hooks/set-state-in-effect */
+
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { API_URL, getAuthHeaders, getUsuario } from '../../services/api'
 import AlunoNavbar from '../../components/aluno/AlunoNavbar'
@@ -25,25 +27,12 @@ type Notificacao = {
 export default function NotificacoesPage() {
   const router = useRouter()
 
-  const [usuario, setUsuario] = useState<Usuario | null>(null)
+  const [usuario] = useState<Usuario | null>(() => getUsuario() as Usuario | null)
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([])
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(true)
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    const usuarioSalvo = getUsuario()
-
-    if (!token || !usuarioSalvo) {
-      router.push('/login')
-      return
-    }
-
-    setUsuario(usuarioSalvo)
-    carregarNotificacoes()
-  }, [router])
-
-  async function carregarNotificacoes() {
+  const carregarNotificacoes = useCallback(async () => {
     try {
       const resposta = await fetch(`${API_URL}/notificacoes`, {
         headers: getAuthHeaders()
@@ -62,13 +51,18 @@ export default function NotificacoesPage() {
     } finally {
       setCarregando(false)
     }
-  }
+  }, [])
 
-  function logout() {
-    localStorage.removeItem('token')
-    localStorage.removeItem('usuario')
-    router.push('/login')
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+
+    if (!token || !usuario) {
+      router.push('/login')
+      return
+    }
+
+    carregarNotificacoes()
+  }, [router, usuario, carregarNotificacoes])
 
   function formatarData(notificacao: Notificacao) {
     const data = notificacao.criada_em || notificacao.created_at

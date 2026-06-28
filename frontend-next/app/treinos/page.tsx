@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+/* eslint-disable react-hooks/set-state-in-effect */
+
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { API_URL, getAuthHeaders, getUsuario } from '../../services/api'
 import AlunoNavbar from '../../components/aluno/AlunoNavbar'
@@ -33,25 +35,12 @@ type Treino = {
 export default function TreinosPage() {
   const router = useRouter()
 
-  const [usuario, setUsuario] = useState<Usuario | null>(null)
+  const [usuario] = useState<Usuario | null>(() => getUsuario() as Usuario | null)
   const [treinos, setTreinos] = useState<Treino[]>([])
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(true)
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    const usuarioSalvo = getUsuario()
-
-    if (!token || !usuarioSalvo) {
-      router.push('/login')
-      return
-    }
-
-    setUsuario(usuarioSalvo)
-    carregarTreinos()
-  }, [router])
-
-  async function carregarTreinos() {
+  const carregarTreinos = useCallback(async () => {
     try {
       const resposta = await fetch(`${API_URL}/treinos`, {
         headers: getAuthHeaders()
@@ -70,13 +59,18 @@ export default function TreinosPage() {
     } finally {
       setCarregando(false)
     }
-  }
+  }, [])
 
-  function logout() {
-    localStorage.removeItem('token')
-    localStorage.removeItem('usuario')
-    router.push('/login')
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+
+    if (!token || !usuario) {
+      router.push('/login')
+      return
+    }
+
+    carregarTreinos()
+  }, [router, usuario, carregarTreinos])
 
   function formatarExercicios(exercicios?: Exercicio[] | string): Exercicio[] {
     if (!exercicios) {
@@ -97,7 +91,7 @@ export default function TreinosPage() {
 
   return (
     <main className="min-h-screen bg-black text-white">
-     <AlunoNavbar />
+      <AlunoNavbar />
 
       <section className="max-w-6xl mx-auto px-6 py-10">
         <div className="mb-8">

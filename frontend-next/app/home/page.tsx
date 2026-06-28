@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+/* eslint-disable react-hooks/set-state-in-effect */
+
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { API_URL, getAuthHeaders, getUsuario } from '../../services/api'
 import AlunoNavbar from '../../components/aluno/AlunoNavbar'
@@ -24,7 +26,8 @@ type Resumo = {
 export default function HomePage() {
   const router = useRouter()
 
-  const [usuario, setUsuario] = useState<Usuario | null>(null)
+  const [usuario] = useState<Usuario | null>(() => getUsuario() as Usuario | null)
+
   const [resumo, setResumo] = useState<Resumo>({
     treinos: 0,
     dietas: 0,
@@ -35,20 +38,7 @@ export default function HomePage() {
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(true)
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    const usuarioSalvo = getUsuario()
-
-    if (!token || !usuarioSalvo) {
-      router.push('/login')
-      return
-    }
-
-    setUsuario(usuarioSalvo)
-    carregarResumo()
-  }, [router])
-
-  async function buscarLista(endpoint: string) {
+  const buscarLista = useCallback(async (endpoint: string) => {
     try {
       const resposta = await fetch(`${API_URL}${endpoint}`, {
         headers: getAuthHeaders()
@@ -64,9 +54,9 @@ export default function HomePage() {
     } catch {
       return []
     }
-  }
+  }, [])
 
-  async function carregarResumo() {
+  const carregarResumo = useCallback(async () => {
     setErro('')
 
     try {
@@ -88,18 +78,23 @@ export default function HomePage() {
     } finally {
       setCarregando(false)
     }
-  }
+  }, [buscarLista])
 
-  function logout() {
-    localStorage.removeItem('token')
-    localStorage.removeItem('usuario')
-    router.push('/login')
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+
+    if (!token || !usuario) {
+      router.push('/login')
+      return
+    }
+
+    carregarResumo()
+  }, [router, usuario, carregarResumo])
 
   return (
     <main className="min-h-screen bg-black text-white">
       <AlunoNavbar />
-      
+
       <section className="max-w-6xl mx-auto px-6 py-10">
         <div className="mb-8">
           <h1 className="text-3xl font-black">

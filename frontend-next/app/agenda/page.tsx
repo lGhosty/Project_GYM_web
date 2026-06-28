@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+/* eslint-disable react-hooks/set-state-in-effect */
+
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { API_URL, getAuthHeaders, getUsuario } from '../../services/api'
 import AlunoNavbar from '../../components/aluno/AlunoNavbar'
@@ -25,25 +27,12 @@ type Agendamento = {
 export default function AgendaPage() {
   const router = useRouter()
 
-  const [usuario, setUsuario] = useState<Usuario | null>(null)
+  const [usuario] = useState<Usuario | null>(() => getUsuario() as Usuario | null)
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([])
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(true)
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    const usuarioSalvo = getUsuario()
-
-    if (!token || !usuarioSalvo) {
-      router.push('/login')
-      return
-    }
-
-    setUsuario(usuarioSalvo)
-    carregarAgendamentos()
-  }, [router])
-
-  async function carregarAgendamentos() {
+  const carregarAgendamentos = useCallback(async () => {
     try {
       const resposta = await fetch(`${API_URL}/agendamentos`, {
         headers: getAuthHeaders()
@@ -62,13 +51,18 @@ export default function AgendaPage() {
     } finally {
       setCarregando(false)
     }
-  }
+  }, [])
 
-  function logout() {
-    localStorage.removeItem('token')
-    localStorage.removeItem('usuario')
-    router.push('/login')
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+
+    if (!token || !usuario) {
+      router.push('/login')
+      return
+    }
+
+    carregarAgendamentos()
+  }, [router, usuario, carregarAgendamentos])
 
   function statusClasse(status?: string) {
     if (status === 'confirmado') {
@@ -80,6 +74,14 @@ export default function AgendaPage() {
     }
 
     return 'border-yellow-400 text-yellow-400 bg-yellow-400/10'
+  }
+
+  function statusTexto(status?: string) {
+    if (status === 'pendente') {
+      return 'Agendado'
+    }
+
+    return status || 'Agendado'
   }
 
   return (
@@ -158,7 +160,7 @@ export default function AgendaPage() {
                   <span
                     className={`text-xs font-bold uppercase border rounded px-3 py-1 ${statusClasse(status)}`}
                   >
-                    {status}
+                    {statusTexto(status)}
                   </span>
                 </div>
               )
