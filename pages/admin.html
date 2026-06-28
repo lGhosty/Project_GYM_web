@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel Admin — FreakyZone</title>
+
+  <link rel="stylesheet" href="../assets/css/style.css"/>
+  <link rel="stylesheet" href="../assets/css/admin.css"/>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-left">
+    <span class="brand">FREAKYZONE</span>
+    <span class="admin-badge">ADMIN</span>
+  </div>
+
+  <div class="nav-links">
+    <a href="home.html">Ver como Aluno</a>
+    <a href="#" onclick="logout()" class="sair">Sair</a>
+  </div>
+</nav>
+
+<main class="content">
+
+  <section class="stat-strip">
+    <div class="stat-box">
+      <div class="stat-val" id="total-alunos">-</div>
+      <div class="stat-lbl">Alunos</div>
+    </div>
+
+    <div class="stat-box">
+      <div class="stat-val" id="total-treinos">-</div>
+      <div class="stat-lbl">Treinos</div>
+    </div>
+
+    <div class="stat-box">
+      <div class="stat-val" id="total-avals">-</div>
+      <div class="stat-lbl">Avaliações</div>
+    </div>
+  </section>
+
+  <section class="tabs">
+    <button class="tab active" onclick="showTab('alunos', this)">👥 Alunos</button>
+    <button class="tab" onclick="showTab('treinos', this)">🏋️ Criar Treino</button>
+    <button class="tab" onclick="showTab('dieta', this)">🥗 Criar Dieta</button>
+    <button class="tab" onclick="showTab('avaliacao', this)">📊 Avaliação</button>
+    <button class="tab" onclick="showTab('agenda', this)">📅 Agenda</button>
+    <button class="tab" onclick="showTab('notif', this)">🔔 Notificações</button>
+  </section>
+
+  <!-- ABA ALUNOS -->
+  <section id="tab-alunos" class="section active">
+    <h2 class="sec-title">Alunos Cadastrados</h2>
+
+    <div class="card">
+      <div id="lista-alunos">
+        <p class="muted-text">Carregando...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABA TREINOS -->
+  <section id="tab-treinos" class="section">
+    <h2 class="sec-title">Criar Treino para Aluno</h2>
+
+    <div class="card">
+      <div id="ok-treino" class="msg-ok"></div>
+      <div id="err-treino" class="msg-err"></div>
+
+      <div class="field">
+        <label>Aluno</label>
+        <select id="select-aluno-treino" class="select-aluno">
+          <option value="">Selecione um aluno...</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Nome do Treino</label>
+          <input id="t-nome" placeholder="Ex: Peito e Tríceps"/>
+        </div>
+
+        <div class="field">
+          <label>Dia da Semana</label>
+          <select id="t-dia">
+            <option>Segunda</option>
+            <option>Terça</option>
+            <option>Quarta</option>
+            <option>Quinta</option>
+            <option>Sexta</option>
+            <option>Sábado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Duração (min)</label>
+        <input id="t-dur" type="number" placeholder="55"/>
+      </div>
+
+      <div class="field">
+        <label>Exercícios (JSON)</label>
+        <textarea id="t-exercicios" placeholder='[{"nome":"Supino","series":4,"repeticoes":10,"descanso_s":90,"grupo":"Peito"}]'></textarea>
+      </div>
+
+      <button class="btn-primary" onclick="criarTreino()">CRIAR TREINO</button>
+    </div>
+  </section>
+
+  <!-- ABA DIETA -->
+  <section id="tab-dieta" class="section">
+    <h2 class="sec-title">Adicionar Refeição para Aluno</h2>
+
+    <div class="card">
+      <div id="ok-dieta" class="msg-ok"></div>
+      <div id="err-dieta" class="msg-err"></div>
+
+      <div class="field">
+        <label>Aluno</label>
+        <select id="select-aluno-dieta" class="select-aluno">
+          <option value="">Selecione um aluno...</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Nome da Refeição</label>
+          <input id="d-nome" placeholder="Ex: Café da Manhã"/>
+        </div>
+
+        <div class="field">
+          <label>Horário</label>
+          <input id="d-hora" placeholder="07:00"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Calorias (kcal)</label>
+          <input id="d-kcal" type="number" placeholder="620"/>
+        </div>
+
+        <div class="field">
+          <label>Descrição</label>
+          <input id="d-desc" placeholder="Ovos + aveia + banana"/>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="criarDieta()">ADICIONAR REFEIÇÃO</button>
+    </div>
+  </section>
+
+  <!-- ABA AVALIAÇÃO -->
+  <section id="tab-avaliacao" class="section">
+    <h2 class="sec-title">Registrar Avaliação Física</h2>
+
+    <div class="card">
+      <div id="ok-aval" class="msg-ok"></div>
+      <div id="err-aval" class="msg-err"></div>
+
+      <div class="field">
+        <label>Aluno</label>
+        <select id="select-aluno-aval" class="select-aluno">
+          <option value="">Selecione um aluno...</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Peso (kg)</label>
+          <input id="av-peso" type="number" placeholder="82.5"/>
+        </div>
+
+        <div class="field">
+          <label>% Gordura</label>
+          <input id="av-gord" type="number" placeholder="14.0"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Massa Muscular (kg)</label>
+          <input id="av-massa" type="number" placeholder="45.0"/>
+        </div>
+
+        <div class="field">
+          <label>Data</label>
+          <input id="av-data" type="date"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Observações</label>
+        <textarea id="av-obs" placeholder="Aluno evoluiu bem..."></textarea>
+      </div>
+
+      <button class="btn-primary" onclick="criarAvaliacao()">REGISTRAR AVALIAÇÃO</button>
+    </div>
+
+    <h2 class="sec-title mt">Histórico de Avaliações</h2>
+    <div id="lista-avals">
+      <p class="muted-text">Carregando...</p>
+    </div>
+  </section>
+
+  <!-- ABA AGENDA -->
+  <section id="tab-agenda" class="section">
+    <h2 class="sec-title">Agendar Evento</h2>
+
+    <div class="card">
+      <div id="ok-agenda" class="msg-ok"></div>
+      <div id="err-agenda" class="msg-err"></div>
+
+      <div class="field">
+        <label>Aluno</label>
+        <select id="select-aluno-agenda" class="select-aluno">
+          <option value="">Selecione um aluno...</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Título</label>
+          <input id="ag-titulo" placeholder="Ex: Avaliação Física"/>
+        </div>
+
+        <div class="field">
+          <label>Tipo</label>
+          <select id="ag-tipo">
+            <option value="treino">Treino</option>
+            <option value="avaliacao">Avaliação</option>
+            <option value="consulta">Consulta</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Data e Hora</label>
+          <input id="ag-data" type="datetime-local"/>
+        </div>
+
+        <div class="field">
+          <label>Descrição</label>
+          <input id="ag-desc" placeholder="Detalhes do evento"/>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="criarAgendamento()">AGENDAR</button>
+    </div>
+
+    <h2 class="sec-title mt">Todos os Agendamentos</h2>
+    <div id="lista-agendamentos">
+      <p class="muted-text">Carregando...</p>
+    </div>
+  </section>
+
+  <!-- ABA NOTIFICAÇÕES -->
+  <section id="tab-notif" class="section">
+    <h2 class="sec-title">Enviar Notificação</h2>
+
+    <div class="card">
+      <div id="ok-notif" class="msg-ok"></div>
+      <div id="err-notif" class="msg-err"></div>
+
+      <div class="field">
+        <label>Aluno</label>
+        <select id="select-aluno-notif" class="select-aluno">
+          <option value="">Selecione um aluno...</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Título</label>
+        <input id="n-titulo" placeholder="Ex: Seu treino foi atualizado!"/>
+      </div>
+
+      <div class="field">
+        <label>Mensagem</label>
+        <textarea id="n-msg" placeholder="Mensagem para o aluno..."></textarea>
+      </div>
+
+      <button class="btn-primary" onclick="enviarNotificacao()">ENVIAR</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="../assets/js/admin.js"></script>
+</body>
+</html>
