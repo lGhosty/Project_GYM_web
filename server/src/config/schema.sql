@@ -104,7 +104,7 @@ INSERT INTO usuarios (nome, email, senha, objetivo, role)
 VALUES (
   'Professor Admin',
   'admin@freakyzone.com',
-  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lh9S',
+  '$2a$10$msNK6I31Ap9b3y/q41fNtuote46cTw0heHIDQLZqL/sDajVZFpaga',
   'Administrar',
   'admin'
 ) ON CONFLICT (email) DO NOTHING;
