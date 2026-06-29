@@ -50,7 +50,27 @@ export default function HomePage() {
         return []
       }
 
-      return Array.isArray(dados) ? dados : []
+      if (Array.isArray(dados)) {
+        return dados
+      }
+
+      if (Array.isArray(dados.refeicoes)) {
+        return dados.refeicoes
+      }
+
+      if (Array.isArray(dados.treinos)) {
+        return dados.treinos
+      }
+
+      if (Array.isArray(dados.agendamentos)) {
+        return dados.agendamentos
+      }
+
+      if (Array.isArray(dados.notificacoes)) {
+        return dados.notificacoes
+      }
+
+      return []
     } catch {
       return []
     }
