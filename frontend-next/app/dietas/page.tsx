@@ -42,16 +42,21 @@ export default function DietasPage() {
       if (!resposta.ok) {
         setErro(dados.erro || 'Erro ao carregar dietas.')
         return
-      }
+     }
 
-      setDietas(Array.isArray(dados) ? dados : [])
+      const listaDietas = Array.isArray(dados)
+        ? dados
+        : Array.isArray(dados.refeicoes)
+          ? dados.refeicoes
+          : []
+
+      setDietas(listaDietas)
     } catch {
       setErro('Não foi possível conectar com o servidor.')
     } finally {
       setCarregando(false)
     }
   }, [])
-
   useEffect(() => {
     const token = localStorage.getItem('token')
 
